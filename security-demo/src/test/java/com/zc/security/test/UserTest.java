@@ -14,8 +14,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import java.util.Date;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -31,7 +32,6 @@ public class UserTest {
 
 
     private ObjectMapper jackson = new ObjectMapper();
-
 
 
     @Before
@@ -79,12 +79,13 @@ public class UserTest {
     public void addUser() throws Exception {
 
 
-        User usr =new User();
+        User usr = new User();
         usr.setUsername("zhongc");
-        usr.setPassword("123456");
+        usr.setPassword("");
         usr.setId("1");
+        usr.setBirthday(new Date());
         // Convert object to JSON string
-        String json =  jackson.writeValueAsString(usr);
+        String json = jackson.writeValueAsString(usr);
 
         mockMvc.perform(post("/user")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -92,5 +93,36 @@ public class UserTest {
                 .andExpect(status().isOk())
                 .andDo(print());
     }
+
+
+    @Test
+    public void updateUser() throws Exception {
+
+
+        User usr = new User();
+        usr.setUsername("zhongc");
+        usr.setPassword("");
+        usr.setId("1");
+        usr.setBirthday(new Date("2018/1/1"));
+        // Convert object to JSON string
+        String json = jackson.writeValueAsString(usr);
+
+        mockMvc.perform(put("/user/1")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(json))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value("1"))
+                .andDo(print());
+    }
+
+
+    @Test
+    public void deleteUser() throws Exception {
+
+        mockMvc.perform(delete("/user/1"))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
 
 }
