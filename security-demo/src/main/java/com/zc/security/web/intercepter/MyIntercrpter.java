@@ -12,7 +12,7 @@ import java.util.Date;
 /**
  * Created by Administrator on 2017/9/21 0021.
  */
-@Component
+//@Component
 public class MyIntercrpter implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse httpServletResponse, Object handler) throws Exception {

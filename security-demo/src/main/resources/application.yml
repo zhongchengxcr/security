@@ -12,7 +12,7 @@ spring:
 #关闭spring security 的默认密码
 security:
   basic:
-    enabled: false
+    enabled: true
 
 server:
   port: 8080

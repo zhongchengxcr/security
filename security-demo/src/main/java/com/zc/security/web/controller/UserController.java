@@ -3,6 +3,8 @@ package com.zc.security.web.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.zc.security.dto.User;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -15,12 +17,15 @@ import java.util.List;
 public class UserController {
 
 
+    @ApiOperation("测试异常")
     @PostMapping("/user/f")
     @JsonView(User.UserSimpleView.class)
     public User test() {
         throw new RuntimeException();
     }
 
+
+    @ApiOperation("创建用户")
     @PostMapping("/user")
     @JsonView(User.UserSimpleView.class)
     public User create(@Valid @RequestBody User u) {
@@ -34,12 +39,14 @@ public class UserController {
     }
 
 
+    @ApiOperation("删除用户")
     @DeleteMapping("user/{id}")
     public void delete(@PathVariable("id") Integer i) {
         System.out.println("delete");
     }
 
 
+    @ApiOperation("更新用户")
     @PutMapping("/user/{id}")
     @JsonView(User.UserSimpleView.class)
     public User update(@PathVariable("id") Integer i, @Valid @RequestBody User u, BindingResult errs) {
@@ -68,14 +75,16 @@ public class UserController {
     }
 
 
+    @ApiOperation("查询用户")
     @GetMapping("/user/{id:\\d+}")
     @JsonView(User.UserDetailView.class)
-    public User get(@PathVariable("id") String i) {
+    public User get(@ApiParam("用户id") @PathVariable("id") String i) {
         System.out.println("PathVariable >>> " + i);
         User u = new User("zhongc", "123456");
         return u;
     }
 
+    @ApiOperation("查询用户列表")
     @GetMapping("/users")
     @JsonView(User.UserSimpleView.class)
     public List<User> users(User usr) {

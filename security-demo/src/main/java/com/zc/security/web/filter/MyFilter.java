@@ -9,7 +9,7 @@ import java.io.IOException;
 /**
  * Created by Administrator on 2017/9/21 0021.
  */
-@Component
+//@Component
 public class MyFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {

@@ -14,7 +14,7 @@ import java.util.Arrays;
 @Component
 public class MyAspect {
 
-    @Around("execution(* com.zc.security.web.controller.UserController.*(..))")
+    //@Around("execution(* com.zc.security.web.controller.UserController.*(..))")
     public Object handlerControllerMethod(ProceedingJoinPoint pjp) throws Throwable {
 
         System.out.println("my aspect start!");
