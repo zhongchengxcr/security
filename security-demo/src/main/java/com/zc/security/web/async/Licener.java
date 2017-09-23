@@ -13,7 +13,7 @@ import javax.annotation.Resource;
 /**
  * Created by Administrator on 2017/9/22 0022.
  */
-@Component
+//@Component
 public class Licener implements ApplicationListener<ContextRefreshedEvent> {
 
 
