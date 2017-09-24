@@ -1,4 +1,4 @@
-package com.zc.security;
+package com.zc.security.security;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

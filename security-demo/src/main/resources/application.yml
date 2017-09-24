@@ -16,3 +16,12 @@ security:
 
 server:
   port: 8080
+
+
+zc:
+  security:
+    browser:
+      loginPage: /error/login_t.html
+      loginType: REDIRECT
+
+
