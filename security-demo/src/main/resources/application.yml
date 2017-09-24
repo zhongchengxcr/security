@@ -22,6 +22,6 @@ zc:
   security:
     browser:
       loginPage: /error/login_t.html
-      loginType: REDIRECT
+      loginType: JSON
 
 
