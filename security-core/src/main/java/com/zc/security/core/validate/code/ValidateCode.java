@@ -21,9 +21,9 @@ public class ValidateCode {
     private LocalDateTime expireTime;
 
     /**
-     * 初始化
+     * 构造
      *
-     * @param code     验证码
+     * @param code 验证码
      * @param expireIn 过期时间  单位秒
      */
     public ValidateCode(String code, int expireIn) {

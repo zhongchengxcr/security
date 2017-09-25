@@ -16,6 +16,18 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import javax.annotation.Resource;
 
+/**
+ * 浏览器部分 Configu ation
+ * <p>
+ * <p>
+ * Copyright: Copyright (c) 2017/09/24 下午3:01
+ * <p>
+ * Company: 百趣
+ * <p>
+ *
+ * @author zhongcheng_m@yeah.net
+ * @version 1.0.0
+ */
 @Configuration
 public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
 

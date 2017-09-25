@@ -24,6 +24,14 @@ public class UserController {
         throw new RuntimeException();
     }
 
+    @ApiOperation("测试异常")
+    @PostMapping("/lol/op")
+    @JsonView(User.UserSimpleView.class)
+    public User test1() {
+        System.out.print("lol");
+        return new User();
+    }
+
 
     @ApiOperation("创建用户")
     @PostMapping("/user")

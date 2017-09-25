@@ -1,20 +1,21 @@
 package com.zc.security.core.validate.code.web;
 
-import com.google.code.kaptcha.Producer;
-import com.zc.security.core.validate.code.ValidateCodeFilter;
-import org.apache.commons.lang.math.RandomUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.zc.security.core.SecurityConstants;
+import com.zc.security.core.validate.code.ValidateCodeGenerator;
+import com.zc.security.core.validate.code.image.ImageValidateCode;
+import org.springframework.social.connect.web.HttpSessionSessionStrategy;
+import org.springframework.social.connect.web.SessionStrategy;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.ServletWebRequest;
 
+import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.awt.image.BufferedImage;
-import java.io.OutputStream;
 
 /**
- * 说明 . <br>
+ * 获取验证码控制器 . <br>
  * <p>
  * <p>
  * Copyright: Copyright (c) 2017/09/24 下午3:27
@@ -29,8 +30,11 @@ import java.io.OutputStream;
 public class ValidateCodeController {
 
 
-    @Autowired
-    private Producer producer;
+
+    @Resource(name = "imageValidateCodeGenerator")
+    private ValidateCodeGenerator validateCodeGenerator;
+
+    private SessionStrategy sessionStrategy = new HttpSessionSessionStrategy();
 
     /**
      * @param request
@@ -40,17 +44,16 @@ public class ValidateCodeController {
     @GetMapping("/validate/code/image")
     public void createCode(HttpServletRequest request, HttpServletResponse response)
             throws Exception {
-        String code = String.valueOf(RandomUtils.nextLong()).substring(0,4);
 
-        System.out.println(code);
+        ImageValidateCode imageValidateCode = (ImageValidateCode) validateCodeGenerator.generator(new ServletWebRequest(request));
 
-        BufferedImage bufferedImage = producer.createImage(code);
+        sessionStrategy.setAttribute(new ServletWebRequest(request), SecurityConstants.IMAGE_CODE_SESSION_KEY, imageValidateCode);
 
-        request.getSession().setAttribute(ValidateCodeFilter.IMAGE_CODE_SESSION_KEY, code);
-
-        OutputStream so = response.getOutputStream();
-
-        ImageIO.write(bufferedImage, "JPEG", so);
+        //设置不缓存图片
+        response.setHeader("Pragma", "no-cache");
+        response.setHeader("Cache-Control", "no-cache");
+        response.setDateHeader("Expires", 0);
+        ImageIO.write(imageValidateCode.getBufferedImage(), "JPEG", response.getOutputStream());
 
     }
 }
