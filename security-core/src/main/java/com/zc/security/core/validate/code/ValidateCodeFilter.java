@@ -1,20 +1,31 @@
 package com.zc.security.core.validate.code;
 
-import com.google.code.kaptcha.Producer;
+import com.zc.security.core.SecurityConstants;
+import com.zc.security.core.properties.SecurityProperties;
 import com.zc.security.core.validate.code.exception.ValidateCodeException;
+import com.zc.security.core.validate.code.image.ImageValidateCode;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.social.connect.web.HttpSessionSessionStrategy;
+import org.springframework.social.connect.web.SessionStrategy;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
+import org.springframework.web.bind.ServletRequestUtils;
+import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 说明 . <br>
@@ -32,10 +43,19 @@ import java.io.IOException;
 public class ValidateCodeFilter extends OncePerRequestFilter {
 
 
-    public static final String IMAGE_CODE_SESSION_KEY = "IMAGE_CODE_SESSION_KEY";
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private Producer producer;
+    private SecurityProperties securityProperties;
+
+    private Set<String> urls = new HashSet<>();
+
+    /**
+     * 验证请求url与配置的url是否匹配的工具类
+     */
+    private AntPathMatcher pathMatcher = new AntPathMatcher();
+
+    private SessionStrategy sessionStrategy = new HttpSessionSessionStrategy();
 
     /**
      * 验证码校验失败处理器
@@ -46,42 +66,64 @@ public class ValidateCodeFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
+        ServletWebRequest servletWebRequest = new ServletWebRequest(request);
 
-        System.out.println("request.getRequestURI() >>>" + request.getRequestURI());
+        logger.info("request.getRequestURI() >>>" + request.getRequestURI());
 
-            if ( request.getRequestURI().endsWith("form")) {
-                HttpSession session = request.getSession(false);
-
-                try {
-                    String tarGetcode = (String) session.getAttribute(IMAGE_CODE_SESSION_KEY);
-
-                    if (StringUtils.isEmpty(tarGetcode)) {
-                        authenticationFailureHandler.onAuthenticationFailure(request, response, new ValidateCodeException("未找到验证码"));
-                        return;
-                    }
-
-                    String code = request.getParameter("imageCode");
-                    if (StringUtils.isEmpty(code)) {
-                        authenticationFailureHandler.onAuthenticationFailure(request, response, new ValidateCodeException("请输入验证码"));
-                        return;
-                    }
+        boolean action = false;
 
 
-                    if (!code.equals(tarGetcode)) {
-                        authenticationFailureHandler.onAuthenticationFailure(request, response, new ValidateCodeException("验证码不匹配"));
-                        return;
-                    }
-                } catch (Exception e) {
-
-                }
+        for (String pattern : urls) {
+            if (pathMatcher.match(pattern, request.getRequestURI())) {
+                action = true;
+                break;
             }
-
-
-
-
-            filterChain.doFilter(request, response);
         }
 
+
+        if (action) {
+            ImageValidateCode imageValidateCode = (ImageValidateCode) sessionStrategy.getAttribute(servletWebRequest,
+                    SecurityConstants.IMAGE_CODE_SESSION_KEY);
+
+            String tarGetcode = imageValidateCode.getCode();
+
+            String imageCode = ServletRequestUtils.getStringParameter(request, "imageCode");
+
+
+            try {
+
+                if (StringUtils.isEmpty(tarGetcode)) {
+                    throw new ValidateCodeException("验证码为空");
+                }
+
+                if (StringUtils.isEmpty(imageCode)) {
+                    throw new ValidateCodeException("请输入验证码");
+                }
+
+
+                if (!imageCode.equals(tarGetcode)) {
+                    throw new ValidateCodeException("验证码不正确");
+                }
+
+            } catch (ValidateCodeException vex) {
+                authenticationFailureHandler.onAuthenticationFailure(request, response, vex);
+                return;
+            }
+        }
+        filterChain.doFilter(request, response);
+    }
+
+
+    @PostConstruct
+    private void addUrlToMap() {
+        String url = securityProperties.getCode().getImage().getUrl();
+        if (StringUtils.isNotBlank(url)) {
+            String[] tmp = url.split(",");
+            for (String s : tmp) {
+                urls.add(s);
+            }
+        }
+    }
 
 
 }

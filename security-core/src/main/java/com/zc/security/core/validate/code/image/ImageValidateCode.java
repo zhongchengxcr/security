@@ -6,7 +6,6 @@ import java.awt.image.BufferedImage;
 import java.time.LocalDateTime;
 
 /**
- * 说明 . <br>
  * 图片验证码
  * <p>
  * Copyright: Copyright (c) 2017/09/24 下午3:00
@@ -17,11 +16,11 @@ import java.time.LocalDateTime;
  * @author zhongcheng_m@yeah.net
  * @version 1.0.0
  */
-public class ImageCode extends ValidateCode {
+public class ImageValidateCode extends ValidateCode {
 
     private BufferedImage bufferedImage;
 
-    public ImageCode(String code, int expireIn, BufferedImage bufferedImage) {
+    public ImageValidateCode(String code, BufferedImage bufferedImage,int expireIn) {
         super(code, expireIn);
         this.bufferedImage = bufferedImage;
     }
