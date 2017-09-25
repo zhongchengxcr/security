@@ -8,6 +8,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.social.connect.web.HttpSessionSessionStrategy;
 import org.springframework.social.connect.web.SessionStrategy;
@@ -85,16 +86,14 @@ public class ValidateCodeFilter extends OncePerRequestFilter {
             ImageValidateCode imageValidateCode = (ImageValidateCode) sessionStrategy.getAttribute(servletWebRequest,
                     SecurityConstants.IMAGE_CODE_SESSION_KEY);
 
-            String tarGetcode = imageValidateCode.getCode();
-
-            String imageCode = ServletRequestUtils.getStringParameter(request, "imageCode");
-
-
             try {
 
-                if (StringUtils.isEmpty(tarGetcode)) {
-                    throw new ValidateCodeException("验证码为空");
+                if (imageValidateCode == null) {
+                    throw new ValidateCodeException("验证码不存在");
                 }
+
+                String tarGetcode = imageValidateCode.getCode();
+                String imageCode = ServletRequestUtils.getStringParameter(request, "imageCode");
 
                 if (StringUtils.isEmpty(imageCode)) {
                     throw new ValidateCodeException("请输入验证码");
@@ -123,6 +122,7 @@ public class ValidateCodeFilter extends OncePerRequestFilter {
                 urls.add(s);
             }
         }
+        urls.add(com.zc.security.core.properties.SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL_FORM);
     }
 
 

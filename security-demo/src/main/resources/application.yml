@@ -23,8 +23,8 @@ zc:
     browser:
       loginPage: /error/login_t.html
       loginType: JSON
-#    code:
-#      image:
-#        url: /user
+    code:
+      image:
+        url: /user/*
 
 
