@@ -92,6 +92,10 @@ public class ValidateCodeFilter extends OncePerRequestFilter {
                     throw new ValidateCodeException("验证码不存在");
                 }
 
+                if (imageValidateCode.isExpried()) {
+                    throw new ValidateCodeException("验证码过期");
+                }
+
                 String tarGetcode = imageValidateCode.getCode();
                 String imageCode = ServletRequestUtils.getStringParameter(request, "imageCode");
 
