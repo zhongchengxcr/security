@@ -1,12 +1,9 @@
 package com.zc.security.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ComponentScan;
+import com.zc.security.web.intercepter.MyIntercrpter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-import com.zc.security.web.intercepter.*;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
  * Created by Administrator on 2017/9/21 0021.

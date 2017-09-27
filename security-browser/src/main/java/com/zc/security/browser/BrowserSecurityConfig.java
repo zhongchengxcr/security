@@ -2,7 +2,7 @@ package com.zc.security.browser;
 
 import com.zc.security.core.properties.SecurityConstants;
 import com.zc.security.core.properties.SecurityProperties;
-import com.zc.security.core.validate.code.ValidateCodeFilter;
+import com.zc.security.core.validate.code.filter.ValidateCodeFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -6,6 +6,7 @@ import com.zc.security.core.validate.code.image.ImageValidateCode;
 import org.springframework.social.connect.web.HttpSessionSessionStrategy;
 import org.springframework.social.connect.web.SessionStrategy;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.ServletWebRequest;
 
@@ -29,8 +30,6 @@ import javax.servlet.http.HttpServletResponse;
 @RestController
 public class ValidateCodeController {
 
-
-
     @Resource(name = "imageValidateCodeGenerator")
     private ValidateCodeGenerator validateCodeGenerator;
 
@@ -41,14 +40,11 @@ public class ValidateCodeController {
      * @param response
      * @throws Exception
      */
-    @GetMapping("/validate/code/image")
-    public void createCode(HttpServletRequest request, HttpServletResponse response)
+    @GetMapping("/validate/code/{type}")
+    public void createCode(@PathVariable("type")String type,HttpServletRequest request, HttpServletResponse response)
             throws Exception {
-
         ImageValidateCode imageValidateCode = (ImageValidateCode) validateCodeGenerator.generator(new ServletWebRequest(request));
-
         sessionStrategy.setAttribute(new ServletWebRequest(request), SecurityConstants.IMAGE_CODE_SESSION_KEY, imageValidateCode);
-
         //设置不缓存图片
         response.setHeader("Pragma", "no-cache");
         response.setHeader("Cache-Control", "no-cache");

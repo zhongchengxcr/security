@@ -1,7 +1,7 @@
 package com.zc.security.core.validate.code;
 
 import com.zc.security.core.validate.code.image.ImageValidateCodeGenerator;
-import org.springframework.beans.factory.annotation.Configurable;
+import com.zc.security.core.validate.code.sms.SmsValidateCodeGenerator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,5 +25,11 @@ public class ValidateCodeConfig {
     @Bean
     public ValidateCodeGenerator imageValidateCodeGenerator() {
         return new ImageValidateCodeGenerator();
+    }
+
+    @ConditionalOnMissingBean(name = "smsValidateCodeGenerator")
+    @Bean
+    public ValidateCodeGenerator smsValidateCodeGenerator() {
+        return new SmsValidateCodeGenerator();
     }
 }

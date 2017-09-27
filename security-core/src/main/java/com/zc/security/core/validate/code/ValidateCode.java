@@ -26,9 +26,9 @@ public class ValidateCode {
      * @param code 验证码
      * @param expireIn 过期时间  单位秒
      */
-    public ValidateCode(String code, int expireIn) {
+    public ValidateCode(String code, LocalDateTime expireIn) {
         this.code = code;
-        this.expireTime = LocalDateTime.now().plusSeconds(expireIn);
+        this.expireTime = expireIn;
     }
 
     public String getCode() {

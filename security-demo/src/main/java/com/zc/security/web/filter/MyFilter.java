@@ -1,8 +1,6 @@
 package com.zc.security.web.filter;
 
 
-import org.springframework.stereotype.Component;
-
 import javax.servlet.*;
 import java.io.IOException;
 

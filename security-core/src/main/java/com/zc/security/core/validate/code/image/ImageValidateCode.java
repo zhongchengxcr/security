@@ -21,7 +21,7 @@ public class ImageValidateCode extends ValidateCode {
     private BufferedImage bufferedImage;
 
     public ImageValidateCode(String code, BufferedImage bufferedImage,int expireIn) {
-        super(code, expireIn);
+        super(code, LocalDateTime.now().plusSeconds(expireIn));
         this.bufferedImage = bufferedImage;
     }
 
