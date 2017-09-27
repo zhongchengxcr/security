@@ -1,6 +1,10 @@
 package com.zc.security.config;
 
 import com.zc.security.web.intercepter.MyIntercrpter;
+import org.springframework.boot.actuate.health.AbstractHealthIndicator;
+import org.springframework.boot.actuate.health.Health;
+import org.springframework.boot.actuate.health.HealthIndicator;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -47,4 +51,20 @@ public class MyConfig extends WebMvcConfigurerAdapter {
 //        return registrationBean;
 //
 //    }
+
+
+
+    @Bean
+    public HealthIndicator redisHealthIndicator(){
+        return new RedisHealthIndicator();
+    }
+
+
+    public static class RedisHealthIndicator extends AbstractHealthIndicator {
+
+        @Override
+        protected void doHealthCheck(Health.Builder builder) throws Exception {
+
+        }
+    }
 }

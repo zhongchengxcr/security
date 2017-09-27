@@ -15,6 +15,12 @@ package com.zc.security.core;
  */
 public interface SecurityConstants {
 
+    /**
+     * 创建验证码url前缀
+     */
+    String DEFAULT_VALIDATE_CODE_URL_PREFIX = "/validate/code/";
+
+
     String IMAGE_CODE_SESSION_KEY = "IMAGE_CODE_SESSION_KEY";
 
     /**
@@ -30,4 +36,35 @@ public interface SecurityConstants {
      * 发送短信验证码 或 验证短信验证码时，传递手机号的参数的名称
      */
     String DEFAULT_PARAMETER_NAME_MOBILE = "mobile";
+
+    /**
+     * 当请求需要身份认证时，默认跳转的url
+     */
+    String DEFAULT_UNAUTHENTICATION_URL = "/authentication/require";
+
+    /**
+     * 默认的用户名密码登录请求处理url
+     */
+    String DEFAULT_LOGIN_PROCESSING_URL_FORM = "/authentication/form";
+
+    /**
+     * 默认的用户名密码登录请求处理url
+     */
+    String DEFAULT_LOGIN_PROCESSING_URL_SMS = "/authentication/mobile";
+
+    /**
+     * 默认的用户名密码登录请求处理url
+     */
+    String DEFAULT_VALIDATE_PROCESSING_URL_IMAGE = "/validate/code/image";
+
+    /**
+     * 默认的用户名密码登录请求处理url
+     */
+    String DEFAULT_VALIDATE_PROCESSING_URL_SMS = "/validate/code/sms";
+
+
+
+
+
+    String DEFAULT_LOGIN_PAGE_URL = "/error/login.html";
 }

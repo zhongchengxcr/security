@@ -14,9 +14,9 @@ package com.zc.security.core.properties;
  */
 public class ValidateCodeProperties {
 
-    private ImageValidateCodeProperties image;
+    private ImageValidateCodeProperties image =new ImageValidateCodeProperties();
 
-    private SmsValidateCodeProperties sms;
+    private SmsValidateCodeProperties sms =new SmsValidateCodeProperties();
 
     public ImageValidateCodeProperties getImage() {
         return image;

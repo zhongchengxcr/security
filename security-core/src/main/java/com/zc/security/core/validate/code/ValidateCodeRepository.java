@@ -17,7 +17,7 @@ public interface ValidateCodeRepository {
      * @param request
      * @param validateCode
      */
-    void save(ServletWebRequest request, ValidateCode validateCode);
+    void save(ServletWebRequest request, ValidateCode validateCode, ValidateCodeType validateCodeType);
 
     /**
      * 移除验证码

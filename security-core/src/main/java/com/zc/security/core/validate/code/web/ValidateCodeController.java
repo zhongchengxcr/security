@@ -2,7 +2,9 @@ package com.zc.security.core.validate.code.web;
 
 import com.zc.security.core.SecurityConstants;
 import com.zc.security.core.validate.code.ValidateCodeGenerator;
+import com.zc.security.core.validate.code.ValidateCodeProcessorHolder;
 import com.zc.security.core.validate.code.image.ImageValidateCode;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.social.connect.web.HttpSessionSessionStrategy;
 import org.springframework.social.connect.web.SessionStrategy;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,26 +32,20 @@ import javax.servlet.http.HttpServletResponse;
 @RestController
 public class ValidateCodeController {
 
-    @Resource(name = "imageValidateCodeGenerator")
-    private ValidateCodeGenerator validateCodeGenerator;
 
-    private SessionStrategy sessionStrategy = new HttpSessionSessionStrategy();
+    @Autowired
+    private ValidateCodeProcessorHolder validateCodeProcessorHolder;
+
 
     /**
      * @param request
      * @param response
      * @throws Exception
      */
-    @GetMapping("/validate/code/{type}")
+
+    @GetMapping(SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX + "/{type}")
     public void createCode(@PathVariable("type")String type,HttpServletRequest request, HttpServletResponse response)
             throws Exception {
-        ImageValidateCode imageValidateCode = (ImageValidateCode) validateCodeGenerator.generator(new ServletWebRequest(request));
-        sessionStrategy.setAttribute(new ServletWebRequest(request), SecurityConstants.IMAGE_CODE_SESSION_KEY, imageValidateCode);
-        //设置不缓存图片
-        response.setHeader("Pragma", "no-cache");
-        response.setHeader("Cache-Control", "no-cache");
-        response.setDateHeader("Expires", 0);
-        ImageIO.write(imageValidateCode.getBufferedImage(), "JPEG", response.getOutputStream());
-
+        validateCodeProcessorHolder.findValidateCodeProcessor(type).create(new ServletWebRequest(request,response));
     }
 }

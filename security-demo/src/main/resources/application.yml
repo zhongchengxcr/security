@@ -25,6 +25,6 @@ zc:
       loginType: JSON
     code:
       image:
-        url: /user/*
+        url:
 
 

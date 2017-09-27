@@ -2,6 +2,9 @@ package com.zc.security.core.validate.code.filter;
 
 import com.zc.security.core.SecurityConstants;
 import com.zc.security.core.properties.SecurityProperties;
+import com.zc.security.core.validate.code.ValidateCodeProcessor;
+import com.zc.security.core.validate.code.ValidateCodeProcessorHolder;
+import com.zc.security.core.validate.code.ValidateCodeType;
 import com.zc.security.core.validate.code.exception.ValidateCodeException;
 import com.zc.security.core.validate.code.image.ImageValidateCode;
 import org.apache.commons.lang.StringUtils;
@@ -22,8 +25,11 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -38,16 +44,12 @@ import java.util.Set;
  * @author zhongcheng_m@yeah.net
  * @version 1.0.0
  */
-@Component("validateCodeFilter")
 public class ValidateCodeFilter extends OncePerRequestFilter {
 
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
     private SecurityProperties securityProperties;
-
-    private Set<String> urls = new HashSet<>();
 
     /**
      * 验证请求url与配置的url是否匹配的工具类
@@ -56,76 +58,106 @@ public class ValidateCodeFilter extends OncePerRequestFilter {
 
     private SessionStrategy sessionStrategy = new HttpSessionSessionStrategy();
 
-    /**
-     * 验证码校验失败处理器
-     */
-    @Autowired
+    private Map<String, ValidateCodeType> urls = new HashMap<>();
+
+    private ValidateCodeProcessorHolder validateCodeProcessorHolder;
+
     private AuthenticationFailureHandler authenticationFailureHandler;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        ServletWebRequest servletWebRequest = new ServletWebRequest(request);
+        ServletWebRequest servletWebRequest = new ServletWebRequest(request, response);
 
         logger.info("request.getRequestURI() >>>" + request.getRequestURI());
 
-        boolean action = false;
+
+        ValidateCodeType validateCodeType = getValidateCodeType(request);
 
 
-        for (String pattern : urls) {
-            if (pathMatcher.match(pattern, request.getRequestURI())) {
-                action = true;
-                break;
-            }
-        }
-
-
-        if (action) {
-            ImageValidateCode imageValidateCode = (ImageValidateCode) sessionStrategy.getAttribute(servletWebRequest,
-                    SecurityConstants.IMAGE_CODE_SESSION_KEY);
+        if (validateCodeType != null) {
+            ValidateCodeProcessor validateCodeProcessor = validateCodeProcessorHolder.findValidateCodeProcessor(validateCodeType);
 
             try {
-
-                if (imageValidateCode == null) {
-                    throw new ValidateCodeException("验证码不存在");
-                }
-
-                if (imageValidateCode.isExpried()) {
-                    throw new ValidateCodeException("验证码过期");
-                }
-
-                String tarGetcode = imageValidateCode.getCode();
-                String imageCode = ServletRequestUtils.getStringParameter(request, "imageCode");
-
-                if (StringUtils.isEmpty(imageCode)) {
-                    throw new ValidateCodeException("请输入验证码");
-                }
-
-
-                if (!imageCode.equals(tarGetcode)) {
-                    throw new ValidateCodeException("验证码不正确");
-                }
-
-            } catch (ValidateCodeException vex) {
-                authenticationFailureHandler.onAuthenticationFailure(request, response, vex);
+                validateCodeProcessor.validate(servletWebRequest);
+            } catch (ValidateCodeException e) {
+                authenticationFailureHandler.onAuthenticationFailure(request, response, e);
                 return;
             }
         }
+
         filterChain.doFilter(request, response);
     }
 
+    /**
+     * 获取ValidateType
+     *
+     * @param request
+     * @return
+     */
+    private ValidateCodeType getValidateCodeType(HttpServletRequest request) {
 
-    @PostConstruct
-    private void addUrlToMap() {
-        String url = securityProperties.getCode().getImage().getUrl();
-        if (StringUtils.isNotBlank(url)) {
-            String[] tmp = url.split(",");
-            for (String s : tmp) {
-                urls.add(s);
+        ValidateCodeType validateCodeType = null;
+
+        for (String url : urls.keySet()) {
+            boolean action = pathMatcher.match(url, request.getRequestURI());
+
+            if (action) {
+                validateCodeType = urls.get(url);
             }
         }
-        urls.add(com.zc.security.core.properties.SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL_FORM);
+
+        return validateCodeType;
     }
 
 
+    /**
+     * 容器启动时执行,向map中添加配置好的url
+     */
+    @PostConstruct
+    private void addUrlToMap() {
+
+
+        String imageUrls = securityProperties.getCode().getImage().getUrl();
+        String smsUrls = securityProperties.getCode().getSms().getUrl();
+
+        urls.put(SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL_FORM, ValidateCodeType.IMAGE);
+        urls.put(SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL_SMS, ValidateCodeType.SMS);
+
+        addUrl2Map(imageUrls, ValidateCodeType.IMAGE);
+        addUrl2Map(smsUrls, ValidateCodeType.SMS);
+
+        //System.out.println(":ab:cd:ef::".split(":").length);//末尾分隔符全部忽略
+        //System.out.println(":ab:cd:ef::".split(":",-1).length);//不忽略任何一个分隔符
+        //System.out.println(StringUtils.split(":ab:cd:ef::",":").length);//最前面的和末尾的分隔符全部都忽略,apache commons
+        //System.out.println(StringUtils.splitPreserveAllTokens(":ab:cd:ef::",":").length);//不忽略任何一个分隔符 apache commons
+
+    }
+
+    /**
+     * @param src
+     * @param type
+     */
+    private void addUrl2Map(String src, ValidateCodeType type) {
+
+        if (StringUtils.isNotBlank(src)) {
+            for (String url : src.split(",")) {
+                urls.put(url, type);
+            }
+        }
+    }
+
+
+    public void setAuthenticationFailureHandler(AuthenticationFailureHandler authenticationFailureHandler) {
+        this.authenticationFailureHandler = authenticationFailureHandler;
+    }
+
+
+    public void setSecurityProperties(SecurityProperties securityProperties) {
+        this.securityProperties = securityProperties;
+    }
+
+    public void setValidateCodeProcessorHolder(ValidateCodeProcessorHolder validateCodeProcessorHolder) {
+        this.validateCodeProcessorHolder = validateCodeProcessorHolder;
+    }
 }

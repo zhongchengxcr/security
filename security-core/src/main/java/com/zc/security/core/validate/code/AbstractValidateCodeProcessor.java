@@ -1,7 +1,10 @@
 package com.zc.security.core.validate.code;
 
+import com.zc.security.core.SecurityConstants;
+import com.zc.security.core.validate.code.exception.ValidateCodeException;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.context.request.ServletWebRequest;
 
 import java.util.Map;
@@ -23,6 +26,7 @@ public abstract class AbstractValidateCodeProcessor<T extends ValidateCode> impl
     @Autowired
     private Map<String, ValidateCodeGenerator> validateCodeGeneratorMap;
 
+    @Autowired
     private ValidateCodeRepository validateCodeRepository;
 
     @Override
@@ -32,12 +36,37 @@ public abstract class AbstractValidateCodeProcessor<T extends ValidateCode> impl
         //保存
         save(request, t);
         //发送
-        send(request,t);
+        send(request, t);
     }
 
 
     @Override
     public void validate(ServletWebRequest request) {
+
+        ValidateCodeType validateCodeType = getValidateCodeType();
+
+        T t = (T) validateCodeRepository.get(request, validateCodeType);
+
+        if (t == null) {
+            throw new ValidateCodeException("验证码不存在");
+        }
+
+        if (t.isExpried()) {
+            throw new ValidateCodeException("验证码过期");
+        }
+
+
+        String requestCode = request.getParameter(validateCodeType.getParamNameOnValidate());
+
+        if (StringUtils.isEmpty(requestCode)) {
+            throw new ValidateCodeException("验证码不能为空");
+        }
+
+        if (!t.getCode().equals(requestCode)) {
+            throw new ValidateCodeException("验证码不匹配");
+        }
+
+        validateCodeRepository.remove(request, validateCodeType);
 
     }
 
@@ -58,7 +87,7 @@ public abstract class AbstractValidateCodeProcessor<T extends ValidateCode> impl
      */
     private void save(ServletWebRequest request, T t) {
         ValidateCode validateCode = new ValidateCode(t.getCode(), t.getExpireTime());
-        validateCodeRepository.save(request, validateCode);
+        validateCodeRepository.save(request, validateCode, getValidateCodeType());
     }
 
 
@@ -70,10 +99,9 @@ public abstract class AbstractValidateCodeProcessor<T extends ValidateCode> impl
      */
     private T generate(ServletWebRequest request) {
         String type = getValidateCodeType().toString().toLowerCase();
-        String validateCodeGeneratorBeanName = type + ValidateCodeProcessor.class.getSimpleName();
+        String validateCodeGeneratorBeanName = type + ValidateCodeGenerator.class.getSimpleName();
         ValidateCodeGenerator validateCodeGenerator = validateCodeGeneratorMap.get(validateCodeGeneratorBeanName);
         ValidateCode validateCode = validateCodeGenerator.generator(request);
-
         return (T) validateCode;
     }
 

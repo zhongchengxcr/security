@@ -32,7 +32,6 @@ public class ValidateCodeProcessorHolder {
 
 
     public ValidateCodeProcessor findValidateCodeProcessor(ValidateCodeType type){
-
        return this.findValidateCodeProcessor(type.toString().toLowerCase());
     }
 

@@ -4,6 +4,7 @@ import com.zc.security.core.validate.code.AbstractValidateCodeProcessor;
 import org.springframework.web.context.request.ServletWebRequest;
 
 import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -20,11 +21,15 @@ import java.io.IOException;
  */
 public class ImageValidateCodeProcessor extends AbstractValidateCodeProcessor<ImageValidateCode> {
 
-
     @Override
     protected void send(ServletWebRequest request, ImageValidateCode imageValidateCode) throws IOException {
+
+        HttpServletResponse response = request.getResponse();
+        response.setHeader("Pragma", "no-cache");
+        response.setHeader("Cache-Control", "no-cache");
+        response.setDateHeader("Expires", 0);
         ImageIO.write(imageValidateCode.getBufferedImage(),
                 "JPEG",
-                request.getResponse().getOutputStream());
+                response.getOutputStream());
     }
 }

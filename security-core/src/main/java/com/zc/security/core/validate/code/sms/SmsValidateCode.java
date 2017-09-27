@@ -19,7 +19,7 @@ import java.util.Locale;
  */
 public class SmsValidateCode extends ValidateCode {
 
-    public SmsValidateCode(String code, LocalDateTime expireIn) {
-        super(code, expireIn);
+    public SmsValidateCode(String code, int expireIn) {
+        super(code, LocalDateTime.now().plusSeconds(expireIn));
     }
 }

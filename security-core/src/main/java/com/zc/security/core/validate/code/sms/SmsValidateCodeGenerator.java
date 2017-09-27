@@ -30,16 +30,14 @@ public class SmsValidateCodeGenerator implements ValidateCodeGenerator {
 
     @Override
     public SmsValidateCode generator(ServletWebRequest request) {
-
         //过期时间
         int expireIn = securityProperties.getCode().getSms().getExpireIn();
-        String mobile = request.getParameter("mobile");
+        //长度
         int length = securityProperties.getCode().getSms().getLength();
-        String smsCode = RandomStringUtils.random(length);
-
+        String smsCode = RandomStringUtils.randomNumeric(length);
         logger.info("短信验证码 >>> " + smsCode + "手机号 >>> mobile");
 
-        return new SmsValidateCode(smsCode, mobile, expireIn);
+        return new SmsValidateCode(smsCode, expireIn);
     }
 
 
