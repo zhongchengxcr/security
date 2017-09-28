@@ -8,7 +8,7 @@
 
 [![](http://progressed.io/bar/40?title=completed)]()
 
-Security是一个web安全校验SDK，配置简单、功能完善、界面流畅、开箱即用！security使用SpringBoot、SpringSecurity、SpringSocial编写，
+Security是一个web安全校验SDK，配置简单、功能完善、开箱即用！security使用SpringBoot、SpringSecurity、SpringSocial编写，
 能与springboot的web项目完美兼容。
 
 欢迎fork、试用。目前还处于开发阶段，括号内有 "complete" 的已经完成开发完成(没有在正式环境跑过)。
