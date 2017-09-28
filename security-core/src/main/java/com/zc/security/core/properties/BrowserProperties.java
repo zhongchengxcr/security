@@ -1,5 +1,7 @@
 package com.zc.security.core.properties;
 
+import com.zc.security.core.SecurityConstants;
+
 /**
  * 浏览器权限部分属性配置 . <br>
  * <p>

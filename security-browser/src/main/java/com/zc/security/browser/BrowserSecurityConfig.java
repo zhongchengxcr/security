@@ -1,22 +1,18 @@
 package com.zc.security.browser;
 
 import com.zc.security.core.SecurityConstants;
-import com.zc.security.core.authentication.sms.SmsCodeAuthenticationFilter;
 import com.zc.security.core.authentication.sms.SmsCodeAuthenticationSecurityConfig;
 import com.zc.security.core.properties.SecurityProperties;
-import com.zc.security.core.validate.code.ValidateCodeProcessorHolder;
-import com.zc.security.core.validate.code.filter.ValidateCodeFilter;
+import com.zc.security.core.validate.code.config.ValidateCodeSecurityConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.annotation.Resource;
 
@@ -35,7 +31,6 @@ import javax.annotation.Resource;
 @Configuration
 public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
 
-
     @Autowired
     private SecurityProperties securityProperties;
 
@@ -45,11 +40,17 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
     @Resource(name = "simpleAuthenticationSuccessHandler")
     private AuthenticationSuccessHandler authenticationSuccessHandler;
 
-    @Autowired
-    private ValidateCodeProcessorHolder validateCodeProcessorHolder;
-
+    /**
+     * 短信验证码登录配置
+     */
     @Autowired
     private SmsCodeAuthenticationSecurityConfig smsCodeAuthenticationSecurityConfig;
+
+    /**
+     * 验证码配置
+     */
+    @Autowired
+    private ValidateCodeSecurityConfig validateCodeSecurityConfig;
 
 
     @Bean
@@ -61,16 +62,14 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        ValidateCodeFilter validateCodeFilter = new ValidateCodeFilter();
-        validateCodeFilter.setAuthenticationFailureHandler(authenticationFailureHandler);
-        validateCodeFilter.setSecurityProperties(securityProperties);
-        validateCodeFilter.setValidateCodeProcessorHolder(validateCodeProcessorHolder);
-
-        http.apply(smsCodeAuthenticationSecurityConfig).and()
-                .addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class)
+        http.apply(smsCodeAuthenticationSecurityConfig)
+                .and()
+                .apply(validateCodeSecurityConfig)
+                .and()
                 .formLogin()
                 .loginPage(securityProperties.getBrowser().getLoginPage())   //登录页面
                 .loginProcessingUrl(SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL_FORM)  //处理登录页面的url
+                //.loginProcessingUrl(SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL)  //处理登录页面的url
                 .successHandler(authenticationSuccessHandler)
                 .failureHandler(authenticationFailureHandler)
                 .and()

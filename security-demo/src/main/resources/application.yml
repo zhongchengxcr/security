@@ -25,6 +25,7 @@ zc:
       loginType: JSON
     code:
       image:
-        url:
-
+        url: /user/1,/user/2
+      sms:
+        url: /user/3,/user/4
 

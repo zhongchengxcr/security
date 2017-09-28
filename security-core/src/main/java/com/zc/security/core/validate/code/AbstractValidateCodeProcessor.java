@@ -1,10 +1,8 @@
 package com.zc.security.core.validate.code;
 
-import com.zc.security.core.SecurityConstants;
 import com.zc.security.core.validate.code.exception.ValidateCodeException;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.context.request.ServletWebRequest;
 
 import java.util.Map;

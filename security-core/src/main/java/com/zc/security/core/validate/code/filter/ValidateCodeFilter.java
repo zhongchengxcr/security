@@ -6,17 +6,12 @@ import com.zc.security.core.validate.code.ValidateCodeProcessor;
 import com.zc.security.core.validate.code.ValidateCodeProcessorHolder;
 import com.zc.security.core.validate.code.ValidateCodeType;
 import com.zc.security.core.validate.code.exception.ValidateCodeException;
-import com.zc.security.core.validate.code.image.ImageValidateCode;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.social.connect.web.HttpSessionSessionStrategy;
-import org.springframework.social.connect.web.SessionStrategy;
-import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
-import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -25,12 +20,9 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * 说明 . <br>
@@ -44,11 +36,12 @@ import java.util.Set;
  * @author zhongcheng_m@yeah.net
  * @version 1.0.0
  */
-public class ValidateCodeFilter extends OncePerRequestFilter {
 
+public class ValidateCodeFilter extends OncePerRequestFilter {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
+    @Autowired
     private SecurityProperties securityProperties;
 
     /**
@@ -56,12 +49,12 @@ public class ValidateCodeFilter extends OncePerRequestFilter {
      */
     private AntPathMatcher pathMatcher = new AntPathMatcher();
 
-    private SessionStrategy sessionStrategy = new HttpSessionSessionStrategy();
-
     private Map<String, ValidateCodeType> urls = new HashMap<>();
 
+    @Autowired
     private ValidateCodeProcessorHolder validateCodeProcessorHolder;
 
+    @Autowired
     private AuthenticationFailureHandler authenticationFailureHandler;
 
     @Override
@@ -69,10 +62,12 @@ public class ValidateCodeFilter extends OncePerRequestFilter {
 
         ServletWebRequest servletWebRequest = new ServletWebRequest(request, response);
 
-        logger.info("request.getRequestURI() >>>" + request.getRequestURI());
+        logger.info("request.getRequestURI() >>> {}", request.getRequestURI());
 
 
         ValidateCodeType validateCodeType = getValidateCodeType(request);
+
+        logger.info("validateCodeType >>> {}", validateCodeType);
 
 
         if (validateCodeType != null) {

@@ -47,6 +47,8 @@ public interface SecurityConstants {
      */
     String DEFAULT_LOGIN_PROCESSING_URL_FORM = "/authentication/form";
 
+    String DEFAULT_LOGIN_PROCESSING_URL = "/authentication/*";
+
     /**
      * 默认的用户名密码登录请求处理url
      */

@@ -1,7 +1,10 @@
 package com.zc.security.core.validate.code.config;
 
+import com.zc.security.core.authentication.sms.SmsCodeUserDetailsService;
+import com.zc.security.core.authentication.sms.completion.NoneSmsCodeUserDetailsService;
 import com.zc.security.core.validate.code.ValidateCodeGenerator;
 import com.zc.security.core.validate.code.ValidateCodeProcessor;
+import com.zc.security.core.validate.code.filter.ValidateCodeFilter;
 import com.zc.security.core.validate.code.image.ImageValidateCodeGenerator;
 import com.zc.security.core.validate.code.image.ImageValidateCodeProcessor;
 import com.zc.security.core.validate.code.sms.DefaultSmsValidateCodeSender;
@@ -25,11 +28,12 @@ import org.springframework.context.annotation.Configuration;
  * @version 1.0.0
  */
 @Configuration
-public class ValidateCodeConfig {
+public class ValidateCodeBeansConfig {
 
     /**
      * 可以被覆盖重写
      * 图片验证码生成器
+     *
      * @return
      */
     @ConditionalOnMissingBean(name = "imageValidateCodeGenerator")
@@ -41,6 +45,7 @@ public class ValidateCodeConfig {
     /**
      * 可以被覆盖重写
      * 短信验证码生成器
+     *
      * @return
      */
     @ConditionalOnMissingBean(name = "smsValidateCodeGenerator")
@@ -52,6 +57,7 @@ public class ValidateCodeConfig {
     /**
      * 可以被覆盖重写
      * 短信验证码处理器
+     *
      * @return
      */
     @ConditionalOnMissingBean(name = "smsValidateCodeProcessor")
@@ -63,6 +69,7 @@ public class ValidateCodeConfig {
     /**
      * 可以被覆盖重写
      * 图片验证码处理器
+     *
      * @return
      */
     @ConditionalOnMissingBean(name = "imageValidateCodeProcessor")
@@ -74,6 +81,7 @@ public class ValidateCodeConfig {
     /**
      * 可以被覆盖重写
      * 短信验证码发送器
+     *
      * @return
      */
     @ConditionalOnMissingBean(SmsValidateCodeSender.class)
@@ -82,5 +90,18 @@ public class ValidateCodeConfig {
         return new DefaultSmsValidateCodeSender();
     }
 
+
+    @Bean
+    public ValidateCodeFilter validateCodeFilter() {
+        ValidateCodeFilter validateCodeFilter = new ValidateCodeFilter();
+        return validateCodeFilter;
+    }
+
+
+    @ConditionalOnMissingBean(SmsCodeUserDetailsService.class)
+    @Bean
+    public SmsCodeUserDetailsService smsCodeUserDetailsService() {
+        return new NoneSmsCodeUserDetailsService();
+    }
 
 }

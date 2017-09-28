@@ -2,7 +2,7 @@ package com.zc.security.browser.web;
 
 
 import com.zc.security.browser.support.SimpleResponse;
-import com.zc.security.core.properties.SecurityConstants;
+import com.zc.security.core.SecurityConstants;
 import com.zc.security.core.properties.SecurityProperties;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;

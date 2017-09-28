@@ -25,13 +25,18 @@ import javax.annotation.Resource;
 public class SmsCodeAuthenticationProvider implements AuthenticationProvider {
 
 
-    private UserDetailsService userDetailsService;
+    private SmsCodeUserDetailsService smsCodeUserDetailsService;
 
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername((String) authentication.getPrincipal());
+        Object userDetail = authentication.getDetails();
+
+        System.out.println(userDetail);
+
+
+        UserDetails userDetails = smsCodeUserDetailsService.loadUserByMobile((String) authentication.getPrincipal());
 
         if (userDetails == null) {
             throw new InternalAuthenticationServiceException("无法获取用户信息");
@@ -62,7 +67,7 @@ public class SmsCodeAuthenticationProvider implements AuthenticationProvider {
         return result;
     }
 
-    public void setUserDetailsService(UserDetailsService userDetailsService) {
-        this.userDetailsService = userDetailsService;
+    public void setSmsCodeUserDetailsService(SmsCodeUserDetailsService smsCodeUserDetailsService) {
+        this.smsCodeUserDetailsService = smsCodeUserDetailsService;
     }
 }
