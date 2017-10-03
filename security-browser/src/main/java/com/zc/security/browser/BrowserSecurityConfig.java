@@ -9,12 +9,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import org.springframework.social.security.SpringSocialConfigurer;
 
-import javax.annotation.Resource;
+import javax.sql.DataSource;
 
 /**
  * 浏览器部分 Configu ation
@@ -34,10 +38,10 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private SecurityProperties securityProperties;
 
-    @Resource(name = "simpleAuthenctiationFailureHandler")
+    @Autowired()
     private AuthenticationFailureHandler authenticationFailureHandler;
 
-    @Resource(name = "simpleAuthenticationSuccessHandler")
+    @Autowired()
     private AuthenticationSuccessHandler authenticationSuccessHandler;
 
     /**
@@ -58,6 +62,23 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+    @Autowired
+    private DataSource dataSource;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
+
+    @Autowired
+    private SpringSocialConfigurer springSocialConfigurer;
+
+    @Bean
+    public PersistentTokenRepository persistentTokenRepository() {
+        JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
+        tokenRepository.setDataSource(dataSource);
+        // tokenRepository.setCreateTableOnStartup(true);
+        return tokenRepository;
+    }
+
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -66,12 +87,19 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .apply(validateCodeSecurityConfig)
                 .and()
+                .apply(springSocialConfigurer)
+                .and()
                 .formLogin()
                 .loginPage(securityProperties.getBrowser().getLoginPage())   //登录页面
                 .loginProcessingUrl(SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL_FORM)  //处理登录页面的url
                 //.loginProcessingUrl(SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL)  //处理登录页面的url
                 .successHandler(authenticationSuccessHandler)
                 .failureHandler(authenticationFailureHandler)
+                .and()
+                .rememberMe()
+                .tokenRepository(persistentTokenRepository())
+                .tokenValiditySeconds(securityProperties.getBrowser().getRememberMeSeconds())
+                .userDetailsService(userDetailsService)
                 .and()
                 .authorizeRequests()//权限配置
                 .antMatchers(securityProperties.getBrowser().getLoginPage(), SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL_FORM, SecurityConstants.DEFAULT_VALIDATE_PROCESSING_URL_IMAGE, SecurityConstants.DEFAULT_VALIDATE_PROCESSING_URL_SMS).permitAll() //匹配  登录页面地址  放开所有权限

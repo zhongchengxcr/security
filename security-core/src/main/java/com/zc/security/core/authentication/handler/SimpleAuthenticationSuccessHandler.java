@@ -27,7 +27,7 @@ import java.io.IOException;
  * @author zhongcheng_m@yeah.net
  * @version 1.0.0
  */
-@Component("simpleAuthenticationSuccessHandler")
+@Component()
 public class SimpleAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
     private Logger logger = LoggerFactory.getLogger(getClass());

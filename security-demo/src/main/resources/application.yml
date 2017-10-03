@@ -28,4 +28,7 @@ zc:
         url: /user/1,/user/2
       sms:
         url: /user/3,/user/4
-
+    social:
+      qq:
+        appId:
+        appSecret:  

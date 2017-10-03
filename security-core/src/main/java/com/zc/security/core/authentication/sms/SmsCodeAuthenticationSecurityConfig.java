@@ -29,10 +29,10 @@ import javax.annotation.Resource;
 public class SmsCodeAuthenticationSecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
 
 
-    @Resource(name = "simpleAuthenctiationFailureHandler")
+    @Autowired()
     private AuthenticationFailureHandler authenticationFailureHandler;
 
-    @Resource(name = "simpleAuthenticationSuccessHandler")
+    @Autowired()
     private AuthenticationSuccessHandler authenticationSuccessHandler;
 
     @Autowired
