@@ -23,6 +23,7 @@ zc:
     browser:
       loginPage: /error/login_t.html
       loginType: JSON
+      signUpUrl: /error/t_sing_up.html
     code:
       image:
         url: /user/1,/user/2

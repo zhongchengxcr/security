@@ -46,6 +46,13 @@ public class QQOauth2Template extends OAuth2Template {
         return restTemplate;
     }
 
+
+    /**
+     * 获取access token
+     * @param accessTokenUrl
+     * @param parameters
+     * @return
+     */
     @Override
     protected AccessGrant postForAccessGrant(String accessTokenUrl, MultiValueMap<String, String> parameters) {
 

@@ -1,4 +1,7 @@
-package com.zc.security.core.properties;
+package com.zc.security.core.properties.validate.code;
+
+import com.zc.security.core.properties.validate.code.ImageValidateCodeProperties;
+import com.zc.security.core.properties.validate.code.SmsValidateCodeProperties;
 
 /**
  * 属性配置 . <br>

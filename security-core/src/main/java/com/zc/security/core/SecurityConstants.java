@@ -55,17 +55,14 @@ public interface SecurityConstants {
     String DEFAULT_LOGIN_PROCESSING_URL_SMS = "/authentication/mobile";
 
     /**
-     * 默认的用户名密码登录请求处理url
+     * 默认获取图片验证码的url
      */
     String DEFAULT_VALIDATE_PROCESSING_URL_IMAGE = "/validate/code/image";
 
     /**
-     * 默认的用户名密码登录请求处理url
+     * 默认获取短信验证码的url
      */
     String DEFAULT_VALIDATE_PROCESSING_URL_SMS = "/validate/code/sms";
-
-
-
 
 
     String DEFAULT_LOGIN_PAGE_URL = "/error/login.html";

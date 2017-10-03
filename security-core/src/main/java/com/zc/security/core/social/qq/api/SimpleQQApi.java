@@ -32,7 +32,7 @@ public class SimpleQQApi extends AbstractOAuth2ApiBinding implements QQApi {
 
     //access_token
     /**
-     * 获取appid地址
+     * 获取opem id 地址
      */
     private final static String URL_GET_OPENID = "https://graph.qq.com/oauth2.0/me?access_token=%s";
 

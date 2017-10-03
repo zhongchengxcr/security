@@ -1,4 +1,5 @@
-package com.zc.security.core.properties;
+package com.zc.security.core.properties.social;
+
 
 import org.springframework.boot.autoconfigure.social.SocialProperties;
 
@@ -6,7 +7,7 @@ import org.springframework.boot.autoconfigure.social.SocialProperties;
  * 说明 . <br>
  * <p>
  * <p>
- * Copyright: Copyright (c) 2017/09/30 下午4:32
+ * Copyright: Copyright (c) 2017/10/03 18:00
  * <p>
  * Company: 百趣
  * <p>
@@ -14,9 +15,9 @@ import org.springframework.boot.autoconfigure.social.SocialProperties;
  * @author zhongcheng_m@yeah.net
  * @version 1.0.0
  */
-public class QQProperties extends SocialProperties {
+public class WXProperties extends SocialProperties {
 
-    private String providerId = "qq";
+    private String providerId = "wx";
 
     public String getProviderId() {
         return providerId;
@@ -25,5 +26,4 @@ public class QQProperties extends SocialProperties {
     public void setProviderId(String providerId) {
         this.providerId = providerId;
     }
-
 }

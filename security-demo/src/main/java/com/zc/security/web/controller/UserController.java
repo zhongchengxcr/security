@@ -2,19 +2,50 @@ package com.zc.security.web.controller;
 
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zc.security.dto.User;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.social.connect.web.ProviderSignInUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.ServletWebRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
 
 @RestController
 public class UserController {
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
+    private ObjectMapper objectMapper = new ObjectMapper();
+
+
+    @Autowired
+    private ProviderSignInUtils providerSignInUtils;
+
+    @PostMapping("/user/regist")
+    public void regist(User u, HttpServletRequest request) throws JsonProcessingException {
+
+        logger.info("regist user : {}", objectMapper.writeValueAsString(u));
+
+        String userId = u.getId();
+
+        //插入数据库
+        providerSignInUtils.doPostSignUp(userId, new ServletWebRequest(request));
+
+
+        //---------------------注册逻辑----------------------
+
+    }
 
 
     @ApiOperation("测试异常")

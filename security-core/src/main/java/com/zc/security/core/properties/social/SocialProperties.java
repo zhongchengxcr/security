@@ -1,4 +1,4 @@
-package com.zc.security.core.properties;
+package com.zc.security.core.properties.social;
 
 /**
  * 属性配置 . <br>
@@ -21,6 +21,9 @@ public class SocialProperties {
 
     private QQProperties qq = new QQProperties();
 
+    private WXProperties wx = new WXProperties();
+
+
     public QQProperties getQq() {
         return qq;
     }
@@ -35,5 +38,13 @@ public class SocialProperties {
 
     public void setFilterProcessesUrl(String filterProcessesUrl) {
         this.filterProcessesUrl = filterProcessesUrl;
+    }
+
+    public WXProperties getWx() {
+        return wx;
+    }
+
+    public void setWx(WXProperties wx) {
+        this.wx = wx;
     }
 }

@@ -19,6 +19,8 @@ import org.springframework.security.web.authentication.rememberme.PersistentToke
 import org.springframework.social.security.SpringSocialConfigurer;
 
 import javax.sql.DataSource;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 浏览器部分 Configu ation
@@ -79,9 +81,11 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
         return tokenRepository;
     }
 
+    private List<String> permitAllUrl = new ArrayList<>();
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
 
         http.apply(smsCodeAuthenticationSecurityConfig)
                 .and()
@@ -102,10 +106,33 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
                 .userDetailsService(userDetailsService)
                 .and()
                 .authorizeRequests()//权限配置
-                .antMatchers(securityProperties.getBrowser().getLoginPage(), SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL_FORM, SecurityConstants.DEFAULT_VALIDATE_PROCESSING_URL_IMAGE, SecurityConstants.DEFAULT_VALIDATE_PROCESSING_URL_SMS).permitAll() //匹配  登录页面地址  放开所有权限
+                .antMatchers(postPermitAllUrl()).permitAll() //匹配  登录页面地址  放开所有权限
                 .anyRequest()   //任何请求
                 .authenticated()  //都需要授权
                 .and().csrf().disable();    //表单登录
 
+    }
+
+    /**
+     * 添加无需授权即可访问的页面
+     *
+     * @return
+     */
+    private String[] postPermitAllUrl() {
+        //浏览器登录页
+        permitAllUrl.add(securityProperties.getBrowser().getLoginPage());
+        //默认的用户名密码登录请求处理url
+        permitAllUrl.add(SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL_FORM);
+        //默认的获取图片验证码的url
+        permitAllUrl.add(SecurityConstants.DEFAULT_VALIDATE_PROCESSING_URL_IMAGE);
+        //默认的获取短信验证码的url
+        permitAllUrl.add(SecurityConstants.DEFAULT_VALIDATE_PROCESSING_URL_SMS);
+        //默认的注册url
+        permitAllUrl.add(securityProperties.getBrowser().getSignUpUrl());
+        //TODO 注册逻辑地址
+        permitAllUrl.add("user/regist");
+
+
+        return (String[]) permitAllUrl.toArray();
     }
 }

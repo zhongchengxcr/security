@@ -1,4 +1,4 @@
-package com.zc.security.core.properties;
+package com.zc.security.core.properties.validate.code;
 
 /**
  * 说明 . <br>

@@ -10,7 +10,7 @@
  * @author zhongcheng_m@yeah.net
  * @version 1.0.0
  */
-package com.zc.security.core.properties;
+package com.zc.security.core.properties.browser;
 
 /**
  * @author zhailiang

@@ -1,4 +1,4 @@
-package com.zc.security.core.properties;
+package com.zc.security.core.properties.validate.code;
 
 /**
  * 图片验证码配置 . <br>

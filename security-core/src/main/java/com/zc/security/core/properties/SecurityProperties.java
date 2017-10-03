@@ -1,6 +1,9 @@
 package com.zc.security.core.properties;
 
 
+import com.zc.security.core.properties.browser.BrowserProperties;
+import com.zc.security.core.properties.social.SocialProperties;
+import com.zc.security.core.properties.validate.code.ValidateCodeProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**

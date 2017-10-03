@@ -1,4 +1,4 @@
-package com.zc.security.core.properties;
+package com.zc.security.core.properties.browser;
 
 import com.zc.security.core.SecurityConstants;
 
@@ -20,6 +20,8 @@ public class BrowserProperties {
     private String loginPage = SecurityConstants.DEFAULT_LOGIN_PAGE_URL;
 
     private LoginResponseType loginType = LoginResponseType.JSON;
+
+    private String signUpUrl = "/sign_up.html";
 
     private int rememberMeSeconds = 3600;
 
@@ -46,5 +48,14 @@ public class BrowserProperties {
 
     public void setRememberMeSeconds(int rememberMeSeconds) {
         this.rememberMeSeconds = rememberMeSeconds;
+    }
+
+
+    public String getSignUpUrl() {
+        return signUpUrl;
+    }
+
+    public void setSignUpUrl(String signUpUrl) {
+        this.signUpUrl = signUpUrl;
     }
 }

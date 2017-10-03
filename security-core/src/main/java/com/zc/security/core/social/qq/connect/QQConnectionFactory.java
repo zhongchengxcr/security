@@ -24,11 +24,11 @@ public class QQConnectionFactory extends OAuth2ConnectionFactory<QQApi> {
      * Create a {@link OAuth2ConnectionFactory}.
      *
      * @param providerId the provider id e.g. "facebook"
-     * @param appid
+     * @param appId
      * @param appSecret
      */
-    public QQConnectionFactory(String providerId, String appid , String appSecret) {
-        super(providerId, new QQServiceProvider(appid,appSecret), new QQAdapter());
+    public QQConnectionFactory(String providerId, String appId , String appSecret) {
+        super(providerId, new QQServiceProvider(appId,appSecret), new QQAdapter());
     }
 
 

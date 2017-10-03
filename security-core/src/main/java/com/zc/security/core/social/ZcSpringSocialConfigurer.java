@@ -1,4 +1,4 @@
-package com.zc.security.core.social.qq.config;
+package com.zc.security.core.social;
 
 import org.springframework.social.security.SocialAuthenticationFilter;
 import org.springframework.social.security.SpringSocialConfigurer;
