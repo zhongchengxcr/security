@@ -32,4 +32,7 @@ zc:
     social:
       qq:
         appId:
-        appSecret:  
+        appSecret:
+      wx:
+        appId: wxa4163dc838806eb5
+        appSecret: 4f99140574bb73ea648631aa525e01a0
