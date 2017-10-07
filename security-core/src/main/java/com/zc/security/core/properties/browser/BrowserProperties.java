@@ -23,7 +23,21 @@ public class BrowserProperties {
 
     private String signUpUrl = "/sign_up.html";
 
+    private String signOutUrl = "";
+
+    private String sessionTimeoutUrl = "/session/invalid";
+
+    /**
+     * 单个账号最大session个数
+     */
+    private int maximumSessions = 1;
+
     private int rememberMeSeconds = 3600;
+
+    /**
+     * 当session达到最大个数时是否允许登录
+     */
+    private boolean maxSessionsPreventsLogin = true;
 
 
     public String getLoginPage() {
@@ -58,4 +72,37 @@ public class BrowserProperties {
     public void setSignUpUrl(String signUpUrl) {
         this.signUpUrl = signUpUrl;
     }
+
+    public String getSessionTimeoutUrl() {
+        return sessionTimeoutUrl;
+    }
+
+    public void setSessionTimeoutUrl(String sessionTimeoutUrl) {
+        this.sessionTimeoutUrl = sessionTimeoutUrl;
+    }
+
+    public int getMaximumSessions() {
+        return maximumSessions;
+    }
+
+    public void setMaximumSessions(int maximumSessions) {
+        this.maximumSessions = maximumSessions;
+    }
+
+    public boolean getMaxSessionsPreventsLogin() {
+        return maxSessionsPreventsLogin;
+    }
+
+    public void setMaxSessionsPreventsLogin(boolean maxSessionsPreventsLogin) {
+        this.maxSessionsPreventsLogin = maxSessionsPreventsLogin;
+    }
+
+    public String getSignOutUrl() {
+        return signOutUrl;
+    }
+
+    public void setSignOutUrl(String signOutUrl) {
+        this.signOutUrl = signOutUrl;
+    }
+
 }

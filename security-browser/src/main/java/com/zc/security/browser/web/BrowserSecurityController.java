@@ -63,6 +63,16 @@ public class BrowserSecurityController {
     }
 
 
+
+    @RequestMapping("/session/invalid")
+    public SimpleResponse sessionInvalid(HttpServletRequest request) {
+
+        String message = "session过期";
+        return new SimpleResponse(message);
+    }
+
+
+
     @RequestMapping(SecurityConstants.DEFAULT_UNAUTHENTICATION_URL)
     @ResponseStatus(code = HttpStatus.UNAUTHORIZED)
     public SimpleResponse requireAuthentication(HttpServletRequest request, HttpServletResponse response) throws IOException {

@@ -9,13 +9,18 @@ spring:
     store-type: none
 
 
+
 #关闭spring security 的默认密码
 security:
   basic:
     enabled: true
 
+
+#session超时时间 最少1分钟 (TomcatEmbeddedServletContainerFactory)
 server:
   port: 80
+  session:
+    timeout: 3600
 
 
 zc:

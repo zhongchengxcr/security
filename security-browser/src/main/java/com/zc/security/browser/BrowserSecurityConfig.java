@@ -16,11 +16,12 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import org.springframework.security.web.session.InvalidSessionStrategy;
+import org.springframework.security.web.session.SessionInformationExpiredStrategy;
 import org.springframework.social.security.SpringSocialConfigurer;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -75,6 +76,12 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private SpringSocialConfigurer springSocialConfigurer;
 
+    @Autowired
+    private SessionInformationExpiredStrategy expiredStrategy;
+
+    @Autowired
+    private InvalidSessionStrategy invalidSessionStrategy;
+
     @Bean
     public PersistentTokenRepository persistentTokenRepository() {
         JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
@@ -101,6 +108,20 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
                 //.loginProcessingUrl(SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL)  //处理登录页面的url
                 .successHandler(authenticationSuccessHandler)
                 .failureHandler(authenticationFailureHandler)
+                .and()
+                .sessionManagement()
+                //session失效跳转地址
+                .invalidSessionUrl(securityProperties.getBrowser().getSessionTimeoutUrl())
+                //session过期策略
+                .invalidSessionStrategy(invalidSessionStrategy)
+                //统一账号最大允许的session个数
+                .maximumSessions(securityProperties.getBrowser().getMaximumSessions())
+
+                //是否允许重复登录
+                .maxSessionsPreventsLogin(securityProperties.getBrowser().getMaxSessionsPreventsLogin())
+                //session并发登录策略
+                .expiredSessionStrategy(expiredStrategy)
+                .and()
                 .and()
                 .rememberMe()
                 .tokenRepository(persistentTokenRepository())
@@ -139,10 +160,10 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
         permitAllUrl.add(SecurityConstants.DEFAULT_UNAUTHENTICATION_URL);
 
         permitAllUrl.add("/connect/*");
-
+        //session超时
+        permitAllUrl.add(securityProperties.getBrowser().getSessionTimeoutUrl());
 
         String[] permitAllUrlArray = new String[permitAllUrl.size()];
-
 
 
         return permitAllUrl.toArray(permitAllUrlArray);
