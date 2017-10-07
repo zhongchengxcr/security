@@ -23,9 +23,11 @@ public class BrowserProperties {
 
     private String signUpUrl = "/sign_up.html";
 
-    private String signOutUrl = "";
+    private String signOutUrl = "/logout";
 
-    private String sessionTimeoutUrl = "/session/invalid";
+    private String signOutSuccessUrl = "";
+
+    private String sessionTimeoutUrl = "/session/invalid.html";
 
     /**
      * 单个账号最大session个数
@@ -105,4 +107,11 @@ public class BrowserProperties {
         this.signOutUrl = signOutUrl;
     }
 
+    public String getSignOutSuccessUrl() {
+        return signOutSuccessUrl;
+    }
+
+    public void setSignOutSuccessUrl(String signOutSuccessUrl) {
+        this.signOutSuccessUrl = signOutSuccessUrl;
+    }
 }

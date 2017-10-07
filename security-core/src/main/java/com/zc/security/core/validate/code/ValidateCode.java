@@ -1,5 +1,6 @@
 package com.zc.security.core.validate.code;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
  * @author zhongcheng_m@yeah.net
  * @version 1.0.0
  */
-public class ValidateCode {
+public class ValidateCode implements Serializable {
 
     private String code;
 

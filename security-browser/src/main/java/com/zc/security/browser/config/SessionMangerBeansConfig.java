@@ -1,11 +1,13 @@
 package com.zc.security.browser.config;
 
+import com.zc.security.browser.logout.SimpleLogoutSuccessHandler;
 import com.zc.security.browser.session.DemoSessionStrategy;
 import com.zc.security.core.properties.SecurityProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.session.InvalidSessionStrategy;
 import org.springframework.security.web.session.SessionInformationExpiredStrategy;
 
@@ -40,4 +42,12 @@ public class SessionMangerBeansConfig {
     public InvalidSessionStrategy invalidSessionStrategy() {
         return new DemoSessionStrategy(securityProperties);
     }
+
+
+    @ConditionalOnMissingBean(LogoutSuccessHandler.class)
+    @Bean
+    public LogoutSuccessHandler logoutSuccessHandler() {
+        return new SimpleLogoutSuccessHandler(securityProperties.getBrowser().getSignOutSuccessUrl());
+    }
+
 }

@@ -1,4 +1,4 @@
-package com.zc.security.core.authentication.handler;
+package com.zc.security.browser.authentication.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zc.security.core.properties.SecurityProperties;

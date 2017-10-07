@@ -14,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.session.InvalidSessionStrategy;
@@ -61,10 +62,6 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
     private ValidateCodeSecurityConfig validateCodeSecurityConfig;
 
 
-    @Bean
-    public PasswordEncoder setPasswordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
     @SuppressWarnings("all")
     @Autowired
@@ -81,6 +78,10 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private InvalidSessionStrategy invalidSessionStrategy;
+
+    @Autowired
+    private LogoutSuccessHandler logoutSuccessHandler;
+
 
     @Bean
     public PersistentTokenRepository persistentTokenRepository() {
@@ -108,6 +109,11 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
                 //.loginProcessingUrl(SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL)  //处理登录页面的url
                 .successHandler(authenticationSuccessHandler)
                 .failureHandler(authenticationFailureHandler)
+                .and()
+                .logout()
+                .logoutUrl(securityProperties.getBrowser().getSignOutUrl())
+                .logoutSuccessUrl(securityProperties.getBrowser().getSignOutSuccessUrl())
+                .logoutSuccessHandler(logoutSuccessHandler)
                 .and()
                 .sessionManagement()
                 //session失效跳转地址
@@ -162,6 +168,9 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
         permitAllUrl.add("/connect/*");
         //session超时
         permitAllUrl.add(securityProperties.getBrowser().getSessionTimeoutUrl());
+
+        //登出
+        permitAllUrl.add(securityProperties.getBrowser().getSignOutUrl());
 
         String[] permitAllUrlArray = new String[permitAllUrl.size()];
 

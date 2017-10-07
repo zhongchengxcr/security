@@ -1,4 +1,4 @@
-package com.zc.security.browser.support;
+package com.zc.security.core.support;
 
 /**
  * 默认返回值 . <br>

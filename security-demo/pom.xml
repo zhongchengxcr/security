@@ -13,11 +13,22 @@
 
 
     <dependencies>
+
+
+
+        <!--<dependency>-->
+            <!--<groupId>com.zc.security</groupId>-->
+            <!--<artifactId>security-browser</artifactId>-->
+            <!--<version>${zc.security.version}</version>-->
+        <!--</dependency>-->
+
+
         <dependency>
             <groupId>com.zc.security</groupId>
-            <artifactId>security-browser</artifactId>
+            <artifactId>security-app</artifactId>
             <version>${zc.security.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>

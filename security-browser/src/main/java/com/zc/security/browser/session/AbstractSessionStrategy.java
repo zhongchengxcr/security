@@ -4,7 +4,7 @@
 package com.zc.security.browser.session;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zc.security.browser.support.SimpleResponse;
+import com.zc.security.core.support.SimpleResponse;
 import com.zc.security.core.properties.SecurityProperties;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
