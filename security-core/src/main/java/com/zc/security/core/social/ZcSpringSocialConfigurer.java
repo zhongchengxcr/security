@@ -15,6 +15,7 @@ import org.springframework.social.security.SpringSocialConfigurer;
  * @author zhongcheng_m@yeah.net
  * @version 1.0.0
  */
+
 public class ZcSpringSocialConfigurer extends SpringSocialConfigurer {
 
     public ZcSpringSocialConfigurer(String filterProcessesUrl) {

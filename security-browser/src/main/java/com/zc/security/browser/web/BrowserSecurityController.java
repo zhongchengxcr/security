@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
@@ -55,6 +56,13 @@ public class BrowserSecurityController {
     private ProviderSignInUtils providerSignInUtils;
 
 
+
+    @RequestMapping(SecurityConstants.DEFAULT_AUTHENTICATION_ME)
+    public Authentication requireAuthentication(Authentication user) {
+        return user;
+    }
+
+
     @RequestMapping(SecurityConstants.DEFAULT_UNAUTHENTICATION_URL)
     @ResponseStatus(code = HttpStatus.UNAUTHORIZED)
     public SimpleResponse requireAuthentication(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -74,10 +82,18 @@ public class BrowserSecurityController {
         return new SimpleResponse("未登录");
     }
 
-    @GetMapping("/social/user")
+    /**
+     * 当用户没有注册时进行社交登录才会将connect放入session
+     *
+     * 获取用户信息
+     * @param request
+     * @return
+     */
+    //@GetMapping("/social/user")
     public SocialUserInfo getSocialUserInfo(HttpServletRequest request) {
         SocialUserInfo socialUserInfo = new SocialUserInfo();
         Connection<?> connection = providerSignInUtils.getConnectionFromSession(new ServletWebRequest(request));
+
         socialUserInfo.setProviderId(connection.getKey().getProviderId());
         socialUserInfo.setProviderUserId(connection.getKey().getProviderUserId());
         socialUserInfo.setNikename(connection.getDisplayName());

@@ -20,6 +20,7 @@ import org.springframework.social.security.SpringSocialConfigurer;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -64,6 +65,7 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+    @SuppressWarnings("all")
     @Autowired
     private DataSource dataSource;
 
@@ -94,7 +96,7 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
                 .apply(springSocialConfigurer)
                 .and()
                 .formLogin()
-                .loginPage(securityProperties.getBrowser().getLoginPage())   //登录页面
+                .loginPage(SecurityConstants.DEFAULT_UNAUTHENTICATION_URL)   //登录页面
                 .loginProcessingUrl(SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL_FORM)  //处理登录页面的url
                 //.loginProcessingUrl(SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL)  //处理登录页面的url
                 .successHandler(authenticationSuccessHandler)
@@ -129,10 +131,20 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
         permitAllUrl.add(SecurityConstants.DEFAULT_VALIDATE_PROCESSING_URL_SMS);
         //默认的注册url
         permitAllUrl.add(securityProperties.getBrowser().getSignUpUrl());
-        //TODO 注册逻辑地址
-        permitAllUrl.add("user/regist");
+        //社交登录授权跳转url
+        permitAllUrl.add(securityProperties.getSocial().getFilterProcessesUrl() + "/*");
+        //注册处理逻辑
+        permitAllUrl.add("/user/regist");
+        //需要授权时跳转的url
+        permitAllUrl.add(SecurityConstants.DEFAULT_UNAUTHENTICATION_URL);
+
+        permitAllUrl.add("/connect/*");
 
 
-        return (String[]) permitAllUrl.toArray();
+        String[] permitAllUrlArray = new String[permitAllUrl.size()];
+
+
+
+        return permitAllUrl.toArray(permitAllUrlArray);
     }
 }

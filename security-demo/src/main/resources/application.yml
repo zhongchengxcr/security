@@ -15,7 +15,7 @@ security:
     enabled: true
 
 server:
-  port: 8080
+  port: 80
 
 
 zc:
@@ -34,5 +34,6 @@ zc:
         appId:
         appSecret:
       wx:
-        appId: wxa4163dc838806eb5
-        appSecret: 4f99140574bb73ea648631aa525e01a0
+        appId: wxd99431bbff8305a0
+        appSecret: 60f78681d063590a469f1b297feff3c4
+        providerId: weixin

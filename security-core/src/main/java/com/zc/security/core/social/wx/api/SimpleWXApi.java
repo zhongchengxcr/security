@@ -1,5 +1,7 @@
 package com.zc.security.core.social.wx.api;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -27,6 +29,7 @@ public class SimpleWXApi extends AbstractOAuth2ApiBinding implements WXApi {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
+    private ObjectMapper objectMapper = new ObjectMapper();
 
 
     /**
@@ -63,13 +66,21 @@ public class SimpleWXApi extends AbstractOAuth2ApiBinding implements WXApi {
 
         logger.info("获取微信用户信息url: {} ", urlGetUserInfo);
 
-        WXUserInfo wXUserInfo = getRestTemplate().getForObject(urlGetUserInfo, WXUserInfo.class);
+        String response = getRestTemplate().getForObject(urlGetUserInfo, String.class);
 
-        wXUserInfo.setOpenid(openId);
+        logger.info("获取微信用户信息: {} ", response);
 
-        logger.info("获取微信用户信息res: {} ", wXUserInfo.toString());
+        if (StringUtils.contains(response, "errcode")) {
+            return null;
+        }
 
-        return wXUserInfo;
+        WXUserInfo profile = null;
+        try {
+            profile = objectMapper.readValue(response, WXUserInfo.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return profile;
     }
 
 

@@ -32,12 +32,13 @@ public class UserController {
     @Autowired
     private ProviderSignInUtils providerSignInUtils;
 
+
     @PostMapping("/user/regist")
     public void regist(User u, HttpServletRequest request) throws JsonProcessingException {
 
         logger.info("regist user : {}", objectMapper.writeValueAsString(u));
 
-        String userId = u.getId();
+        String userId = u.getUsername();
 
         //插入数据库
         providerSignInUtils.doPostSignUp(userId, new ServletWebRequest(request));

@@ -2,6 +2,7 @@ package com.zc.security.security;
 
 import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.ConnectionSignUp;
+import org.springframework.stereotype.Component;
 
 /**
  * 说明 . <br>
@@ -15,6 +16,7 @@ import org.springframework.social.connect.ConnectionSignUp;
  * @author zhongcheng_m@yeah.net
  * @version 1.0.0
  */
+@Component
 public class DemoConnectSignUp implements ConnectionSignUp {
 
 
@@ -28,18 +30,15 @@ public class DemoConnectSignUp implements ConnectionSignUp {
      */
     @Override
     public String execute(Connection<?> connection) {
-
         /**
          * 注册逻辑
          */
-
-
         connection.getDisplayName();
         connection.getImageUrl();
         connection.getKey().getProviderId();
         connection.getKey().getProviderUserId();
 
-        return "userId";
+        return "zhongc";
     }
 
 

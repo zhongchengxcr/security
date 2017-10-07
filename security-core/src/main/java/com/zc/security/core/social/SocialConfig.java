@@ -1,7 +1,10 @@
 package com.zc.security.core.social;
 
 import com.zc.security.core.properties.SecurityProperties;
+import com.zc.security.core.social.binding.view.ConnectResultView;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.encrypt.Encryptors;
@@ -13,6 +16,7 @@ import org.springframework.social.connect.UsersConnectionRepository;
 import org.springframework.social.connect.jdbc.JdbcUsersConnectionRepository;
 import org.springframework.social.connect.web.ProviderSignInUtils;
 import org.springframework.social.security.SpringSocialConfigurer;
+import org.springframework.web.servlet.View;
 
 import javax.sql.DataSource;
 
@@ -33,6 +37,7 @@ import javax.sql.DataSource;
 public class SocialConfig extends SocialConfigurerAdapter {
 
 
+    @SuppressWarnings("all")
     @Autowired
     private DataSource dataSource;
 
@@ -42,10 +47,28 @@ public class SocialConfig extends SocialConfigurerAdapter {
     @Autowired(required = false)
     private ConnectionSignUp connectionSignUp;
 
+    @Autowired
+    private UsersConnectionRepository usersConnectionRepository;
+
+
     @Override
     public UsersConnectionRepository getUsersConnectionRepository(ConnectionFactoryLocator connectionFactoryLocator) {
-        JdbcUsersConnectionRepository repository = new JdbcUsersConnectionRepository(dataSource, connectionFactoryLocator, Encryptors.noOpText());
+       /* JdbcUsersConnectionRepository  repository = new JdbcUsersConnectionRepository(dataSource, connectionFactoryLocator, Encryptors.noOpText());
+        *//**
+         * 表名的前缀
+         *//*
+        repository.setTablePrefix("zc_");
 
+        if (connectionSignUp != null) {
+            repository.setConnectionSignUp(connectionSignUp);
+        }*/
+        return usersConnectionRepository;
+    }
+
+
+    @Bean
+    public UsersConnectionRepository usersConnectionRepository(ConnectionFactoryLocator connectionFactoryLocator) {
+        JdbcUsersConnectionRepository repository = new JdbcUsersConnectionRepository(dataSource, connectionFactoryLocator, Encryptors.noOpText());
         /**
          * 表名的前缀
          */
@@ -57,7 +80,6 @@ public class SocialConfig extends SocialConfigurerAdapter {
 
         return repository;
     }
-
 
     @Bean
     public SpringSocialConfigurer springSocialConfigurer() {
@@ -79,5 +101,11 @@ public class SocialConfig extends SocialConfigurerAdapter {
         return new ProviderSignInUtils(connectionFactoryLocator, getUsersConnectionRepository(connectionFactoryLocator));
     }
 
+
+    @Bean({"connect/weixinConnect", "connect/weixinConnected"})
+    @ConditionalOnMissingBean(name = "connectedView")
+    public View connectedView() {
+        return new ConnectResultView();
+    }
 
 }
