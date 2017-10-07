@@ -1,4 +1,4 @@
-package com.zc.security.app.validate.code.support;
+package com.zc.security.support;
 
 import com.zc.security.core.validate.code.ValidateCode;
 import com.zc.security.core.validate.code.ValidateCodeRepository;

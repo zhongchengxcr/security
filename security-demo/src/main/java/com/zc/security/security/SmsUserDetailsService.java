@@ -35,7 +35,9 @@ public class SmsUserDetailsService implements UserDetailsService {
 
         String password = "123456";
 
-        User u = new User(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, AuthorityUtils.commaSeparatedStringToAuthorityList("admin"));
+        User u = new User(username, password, enabled, accountNonExpired
+                , credentialsNonExpired, accountNonLocked
+                , AuthorityUtils.commaSeparatedStringToAuthorityList("admin,ROLE_USER"));
 
         return u;
     }

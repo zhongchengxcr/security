@@ -53,7 +53,8 @@ public class MyUserDetailService implements UserDetailsService, SocialUserDetail
 
         logger.info("加密后的密码>>" + password);
 
-        SocialUser u = new SocialUser(s, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, AuthorityUtils.commaSeparatedStringToAuthorityList("admin"));
+        SocialUser u = new SocialUser(s, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked,
+                AuthorityUtils.commaSeparatedStringToAuthorityList("admin,ROLE_USER"));
 
         return u;
     }

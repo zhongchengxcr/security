@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.social.connect.web.ProviderSignInUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -32,6 +33,10 @@ public class UserController {
     @Autowired
     private ProviderSignInUtils providerSignInUtils;
 
+    @GetMapping("/user/me")
+    public Authentication requireAuthentication(Authentication user) {
+        return user;
+    }
 
     @PostMapping("/user/regist")
     public void regist(User u, HttpServletRequest request) throws JsonProcessingException {

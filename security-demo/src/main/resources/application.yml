@@ -14,6 +14,12 @@ spring:
 security:
   basic:
     enabled: true
+  oauth2:
+    client:
+      client-id: zc
+      client-secret: zcs
+      #clientId: zc
+      #clientSecret: zcs
 
 
 #session超时时间 最少1分钟 (TomcatEmbeddedServletContainerFactory)
