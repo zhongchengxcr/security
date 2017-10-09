@@ -1,4 +1,4 @@
-package com.zc.security.config;
+package com.zc.security.app.config;
 
 import com.zc.security.web.intercepter.MyIntercrpter;
 import org.springframework.boot.actuate.health.AbstractHealthIndicator;

@@ -116,7 +116,7 @@ public class ValidateCodeFilter extends OncePerRequestFilter {
         String imageUrls = securityProperties.getCode().getImage().getUrl();
         String smsUrls = securityProperties.getCode().getSms().getUrl();
 
-        urls.put(SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL_FORM, ValidateCodeType.IMAGE);
+        //urls.put(SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL_FORM, ValidateCodeType.IMAGE);
         urls.put(SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL_SMS, ValidateCodeType.SMS);
 
         addUrl2Map(imageUrls, ValidateCodeType.IMAGE);

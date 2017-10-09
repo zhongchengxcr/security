@@ -1,4 +1,4 @@
-package com.zc.security.config;
+package com.zc.security.app.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -49,8 +49,6 @@ public class WXOauth2Template extends OAuth2Template {
     private String accessTokenUrl;
 
 
-
-
     @Override
     protected AccessGrant postForAccessGrant(String accessTokenUrl, MultiValueMap<String, String> parameters) {
 
@@ -86,7 +84,7 @@ public class WXOauth2Template extends OAuth2Template {
 
 
     /* (non-Javadoc)
-	 * @see org.springframework.social.oauth2.OAuth2Template#exchangeForAccess(java.lang.String, java.lang.String, org.springframework.util.MultiValueMap)
+     * @see org.springframework.social.oauth2.OAuth2Template#exchangeForAccess(java.lang.String, java.lang.String, org.springframework.util.MultiValueMap)
 	 */
     @Override
     public AccessGrant exchangeForAccess(String authorizationCode, String redirectUri,
@@ -94,12 +92,13 @@ public class WXOauth2Template extends OAuth2Template {
 
         StringBuilder accessTokenRequestUrl = new StringBuilder(accessTokenUrl);
 
-        accessTokenRequestUrl.append("?appid="+clientId);
-        accessTokenRequestUrl.append("&secret="+clientSecret);
-        accessTokenRequestUrl.append("&code="+authorizationCode);
+        accessTokenRequestUrl.append("?appid=" + clientId);
+        accessTokenRequestUrl.append("&secret=" + clientSecret);
+        accessTokenRequestUrl.append("&code=" + authorizationCode);
         accessTokenRequestUrl.append("&grant_type=authorization_code");
-        accessTokenRequestUrl.append("&redirect_uri="+redirectUri);
-
+        if (StringUtils.isNotBlank(redirectUri)) {
+            accessTokenRequestUrl.append("&redirect_uri=" + redirectUri);
+        }
         return getAccessToken(accessTokenRequestUrl);
     }
 
@@ -108,9 +107,9 @@ public class WXOauth2Template extends OAuth2Template {
 
         StringBuilder refreshTokenUrl = new StringBuilder(REFRESH_TOKEN_URL);
 
-        refreshTokenUrl.append("?appid="+clientId);
+        refreshTokenUrl.append("?appid=" + clientId);
         refreshTokenUrl.append("&grant_type=refresh_token");
-        refreshTokenUrl.append("&refresh_token="+refreshToken);
+        refreshTokenUrl.append("&refresh_token=" + refreshToken);
 
         return getAccessToken(refreshTokenUrl);
     }
@@ -118,11 +117,11 @@ public class WXOauth2Template extends OAuth2Template {
     @SuppressWarnings("unchecked")
     private AccessGrant getAccessToken(StringBuilder accessTokenRequestUrl) {
 
-        logger.info("获取access_token, 请求URL: "+accessTokenRequestUrl.toString());
+        logger.info("获取access_token, 请求URL: " + accessTokenRequestUrl.toString());
 
         String response = getRestTemplate().getForObject(accessTokenRequestUrl.toString(), String.class);
 
-        logger.info("获取access_token, 响应内容: "+response);
+        logger.info("获取access_token, 响应内容: " + response);
 
         Map<String, Object> result = null;
         try {
@@ -132,10 +131,10 @@ public class WXOauth2Template extends OAuth2Template {
         }
 
         //返回错误码时直接返回空
-        if(StringUtils.isNotBlank(MapUtils.getString(result, "errcode"))){
+        if (StringUtils.isNotBlank(MapUtils.getString(result, "errcode"))) {
             String errcode = MapUtils.getString(result, "errcode");
             String errmsg = MapUtils.getString(result, "errmsg");
-            throw new RuntimeException("获取access token失败, errcode:"+errcode+", errmsg:"+errmsg);
+            throw new RuntimeException("获取access token失败, errcode:" + errcode + ", errmsg:" + errmsg);
         }
 
         WXAccessGrant accessToken = new WXAccessGrant(
@@ -155,7 +154,7 @@ public class WXOauth2Template extends OAuth2Template {
      */
     public String buildAuthenticateUrl(OAuth2Parameters parameters) {
         String url = super.buildAuthenticateUrl(parameters);
-        url = url + "&appid="+clientId+"&scope=snsapi_login";
+        url = url + "&appid=" + clientId + "&scope=snsapi_login";
         return url;
     }
 

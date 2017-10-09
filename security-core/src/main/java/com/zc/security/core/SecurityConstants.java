@@ -71,4 +71,23 @@ public interface SecurityConstants {
 
 
     String DEFAULT_LOGIN_PAGE_URL = "/error/login.html";
+
+    /**
+     * openid参数名
+     */
+    String DEFAULT_PARAMETER_NAME_OPENID = "openId";
+    /**
+     * providerId参数名
+     */
+    String DEFAULT_PARAMETER_NAME_PROVIDERID = "providerId";
+
+    /**
+     * 使用app进行social登录时  使用授权码模式的code参数
+     */
+    String DEFAULT_PARAMETER_NAME_CODE = "code";
+
+    /**
+     * 默认的OPENID登录请求处理url
+     */
+    String DEFAULT_SIGN_IN_PROCESSING_URL_OPENID = "/authentication/openid";
 }

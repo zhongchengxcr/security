@@ -1,14 +1,15 @@
-package com.zc.security.authentication.handler;
+package com.zc.security.app.authentication.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zc.security.core.properties.SecurityProperties;
+import com.zc.security.core.support.SimpleResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
+import sun.java2d.pipe.SpanShapeRenderer;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
@@ -29,7 +30,7 @@ import java.io.IOException;
  * @version 1.0.0
  */
 @Component()
-public class SimpleAuthenctiationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
+public class AppAuthenctiationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -41,21 +42,12 @@ public class SimpleAuthenctiationFailureHandler extends SimpleUrlAuthenticationF
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-        logger.info("登录失败处理!");
 
-        logger.info("loginType >>> {} !" , securityProperties.getBrowser().getLoginType() );
-        switch (securityProperties.getBrowser().getLoginType()){
-            case JSON:
-                response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-                response.setContentType("application/json;charset=UTF-8");
-                response.getWriter().write(objectMapper.writeValueAsString(exception.getMessage()));
-                break;
-            case REDIRECT:
-                super.onAuthenticationFailure(request,response,exception);
-                break;
-            default:
-                super.onAuthenticationFailure(request,response,exception);
-        }
+
+        SimpleResponse simpleResponse = new SimpleResponse(exception.getMessage());
+
+        response.setContentType("application/json;charset=UTF-8");
+        response.getWriter().write(objectMapper.writeValueAsString(simpleResponse));
 
 
     }

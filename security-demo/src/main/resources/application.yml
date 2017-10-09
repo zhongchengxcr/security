@@ -40,6 +40,7 @@ zc:
         url: /user/1,/user/2
       sms:
         url: /user/3,/user/4
+        expireIn: 3600
     social:
       qq:
         appId:
