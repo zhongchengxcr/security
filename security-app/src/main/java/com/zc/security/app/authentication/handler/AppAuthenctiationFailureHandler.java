@@ -1,15 +1,19 @@
 package com.zc.security.app.authentication.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zc.security.app.authentication.handler.openid.OpenIdAuthenticationToken;
+import com.zc.security.app.social.exception.SocialUserNotFoundException;
 import com.zc.security.core.properties.SecurityProperties;
 import com.zc.security.core.support.SimpleResponse;
+import com.zc.security.core.support.SocialSingUpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
+import org.springframework.social.security.SocialAuthenticationServiceLocator;
 import org.springframework.stereotype.Component;
-import sun.java2d.pipe.SpanShapeRenderer;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
@@ -40,14 +44,34 @@ public class AppAuthenctiationFailureHandler extends SimpleUrlAuthenticationFail
     @Resource
     private ObjectMapper objectMapper;
 
+    @SuppressWarnings("all")
+    @Autowired
+    private SocialAuthenticationServiceLocator authServiceLocator;
+
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
 
+        Object reponse = null;
 
-        SimpleResponse simpleResponse = new SimpleResponse(exception.getMessage());
+        //社交登录用户未找到
+        if (exception instanceof SocialUserNotFoundException) {
+            //TODO  待改造
+            reponse = new SocialSingUpResponse();
+            OpenIdAuthenticationToken authenticationToken = (OpenIdAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+
+            String providerId = authenticationToken.getProviderId();
+
+
+            authServiceLocator.getConnectionFactory(providerId).createConnection()
+
+
+        } else {
+            reponse = new SimpleResponse(exception.getMessage());
+        }
+
 
         response.setContentType("application/json;charset=UTF-8");
-        response.getWriter().write(objectMapper.writeValueAsString(simpleResponse));
+        response.getWriter().write(objectMapper.writeValueAsString(reponse));
 
 
     }

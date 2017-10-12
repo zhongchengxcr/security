@@ -1,9 +1,10 @@
 package com.zc.security.app.authentication.handler.openid;
 
+import com.zc.security.app.social.exception.SocialUserNotFoundException;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.social.connect.UsersConnectionRepository;
 import org.springframework.social.security.SocialUserDetails;
@@ -44,9 +45,9 @@ public class OpenIdAuthenticationProvider implements AuthenticationProvider {
         Set<String> userIds = usersConnectionRepository.findUserIdsConnectedTo(providerId, providerUserIds);
 
         if (userIds == null || userIds.size() < 1) {
-            throw new InternalAuthenticationServiceException("无法获取用户信息");
+            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            throw new SocialUserNotFoundException("无法获取用户信息");
         }
-
 
         String userId = userIds.iterator().next();
 
