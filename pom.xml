@@ -15,6 +15,9 @@
         <module>security-browser</module>
         <module>security-core</module>
         <module>security-demo</module>
+        <module>security-ssoserver</module>
+        <module>security-ssoclient1</module>
+        <module>security-ssoclient2</module>
     </modules>
 
     <dependencyManagement>
