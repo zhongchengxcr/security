@@ -37,7 +37,7 @@ public class DemoConnectSignUp implements ConnectionSignUp {
         connection.getImageUrl();
         connection.getKey().getProviderId();
         connection.getKey().getProviderUserId();
-
+//根据社交用户信息默认创建用户并返回用户唯一标识
         return "zhongc";
     }
 

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zc.security.dto.User;
+import com.zc.security.util.AuthenticationUtils;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
@@ -19,6 +20,7 @@ import org.springframework.web.context.request.ServletWebRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -34,8 +36,8 @@ public class UserController {
     private ProviderSignInUtils providerSignInUtils;
 
     @GetMapping("/user/me")
-    public Authentication requireAuthentication(Authentication user) {
-        return user;
+    public Object requireAuthentication(Authentication authentication) throws UnsupportedEncodingException {
+        return AuthenticationUtils.getUserDetails();
     }
 
     @PostMapping("/user/regist")

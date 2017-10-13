@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
+import org.springframework.social.connect.support.OAuth2ConnectionFactory;
+import org.springframework.social.oauth2.AccessGrant;
 import org.springframework.social.security.SocialAuthenticationServiceLocator;
 import org.springframework.stereotype.Component;
 
@@ -44,13 +46,12 @@ public class AppAuthenctiationFailureHandler extends SimpleUrlAuthenticationFail
     @Resource
     private ObjectMapper objectMapper;
 
-    @SuppressWarnings("all")
-    @Autowired
-    private SocialAuthenticationServiceLocator authServiceLocator;
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
 
+
+        logger.info("login failed");
         Object reponse = null;
 
         //社交登录用户未找到
@@ -61,8 +62,6 @@ public class AppAuthenctiationFailureHandler extends SimpleUrlAuthenticationFail
 
             String providerId = authenticationToken.getProviderId();
 
-
-            authServiceLocator.getConnectionFactory(providerId).createConnection()
 
 
         } else {

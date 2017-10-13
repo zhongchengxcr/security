@@ -29,6 +29,8 @@ public class WXAutoConfig extends SocialAutoConfigurerAdapter {
     @Autowired
     private SecurityProperties securityProperties;
 
+
+
     @Override
     protected ConnectionFactory<?> createConnectionFactory() {
         String providerId = securityProperties.getSocial().getWx().getProviderId();
@@ -39,4 +41,6 @@ public class WXAutoConfig extends SocialAutoConfigurerAdapter {
 
         return new WXConnectionFactory(providerId, appId, appSecret);
     }
+
+
 }

@@ -1,4 +1,4 @@
-package com.zc.security.app;
+package com.zc.security.app.config.server;
 
 import com.zc.security.app.authentication.handler.openid.OpenIdAuthenticationSecurityConfig;
 import com.zc.security.core.SecurityConstants;
@@ -6,14 +6,12 @@ import com.zc.security.core.authentication.sms.SmsCodeAuthenticationSecurityConf
 import com.zc.security.core.properties.SecurityProperties;
 import com.zc.security.core.validate.code.config.ValidateCodeSecurityConfig;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
+import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
-import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.social.security.SpringSocialConfigurer;
 
 import javax.sql.DataSource;
@@ -21,10 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 说明 . <br>
+ * 资源服务器配置. <br>
  * <p>
  * <p>
- * Copyright: Copyright (c) 2017/10/07 下午8:59
+ * Copyright: Copyright (c) 2017/10/07 17:12
  * <p>
  * Company: 百趣
  * <p>
@@ -32,8 +30,9 @@ import java.util.List;
  * @author zhongcheng_m@yeah.net
  * @version 1.0.0
  */
-//@Configuration
-public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
+@Configuration
+@EnableResourceServer
+public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     @Autowired
     private SecurityProperties securityProperties;
@@ -68,29 +67,17 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
     private OpenIdAuthenticationSecurityConfig openIdAuthenticationSecurityConfig;
 
 
-    @Bean
-    public PersistentTokenRepository persistentTokenRepository() {
-        JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
-        tokenRepository.setDataSource(dataSource);
-        // tokenRepository.setCreateTableOnStartup(true);
-        return tokenRepository;
-    }
-
     private List<String> permitAllUrl = new ArrayList<>();
 
     @Override
-    protected void configure(HttpSecurity http) throws Exception {
-
-
+    public void configure(HttpSecurity http) throws Exception {
         http.apply(smsCodeAuthenticationSecurityConfig)
                 .and()
                 .apply(validateCodeSecurityConfig)
                 .and()
                 .apply(springSocialConfigurer)
                 .and()
-
                 .apply(openIdAuthenticationSecurityConfig)
-
                 .and()
                 .formLogin()
                 .loginPage(SecurityConstants.DEFAULT_UNAUTHENTICATION_URL)   //登录页面
@@ -104,7 +91,6 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest()   //任何请求
                 .authenticated()  //都需要授权
                 .and().csrf().disable();    //表单登录
-
     }
 
     /**
@@ -113,8 +99,6 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
      * @return
      */
     private String[] postPermitAllUrl() {
-        //浏览器登录页
-        permitAllUrl.add(securityProperties.getBrowser().getLoginPage());
         //默认的用户名密码登录请求处理url
         permitAllUrl.add(SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL_FORM);
         //默认的获取图片验证码的url
@@ -136,7 +120,7 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
         permitAllUrl.add(securityProperties.getBrowser().getSessionTimeoutUrl());
 
         //登出
-        permitAllUrl.add(securityProperties.getBrowser().getSignOutUrl());
+        permitAllUrl.add("/oauth/token");
 
         String[] permitAllUrlArray = new String[permitAllUrl.size()];
 

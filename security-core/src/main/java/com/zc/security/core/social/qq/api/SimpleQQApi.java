@@ -86,7 +86,6 @@ public class SimpleQQApi extends AbstractOAuth2ApiBinding implements QQApi {
             qqUserInfo.setOpenId(openId);
         } catch (Exception e) {
             throw new RuntimeException("转换用户信息失败!");
-
         }
 
         return qqUserInfo;

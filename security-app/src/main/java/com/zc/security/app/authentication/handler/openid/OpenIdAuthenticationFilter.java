@@ -55,6 +55,19 @@ public class OpenIdAuthenticationFilter extends AbstractAuthenticationProcessing
                     "Authentication method not supported: " + request.getMethod());
         }
 
+
+        /**
+         * TODO
+         *
+         * 改造
+         * 目前大多数移动设备使用社交登录的时候 通常会嵌入第三方应用的SDK
+         *
+         * 第三方的SDK通常提供获取用户信息的api(微信,qq)
+         *
+         * 所以获取用户信息以及openid或者token交给移动设备去做,然后传到服务端
+         *
+         *
+         */
         String openId;
 
         String providerId = obtainPassword(request);
