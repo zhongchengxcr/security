@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
  * @version 1.0.0
  */
 //@Component("smsUserDetailsService")
+@SuppressWarnings("ALL")
 public class SmsUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

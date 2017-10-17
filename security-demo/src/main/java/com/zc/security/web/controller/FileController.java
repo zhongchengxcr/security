@@ -19,7 +19,7 @@ import java.util.Date;
 public class FileController {
 
 
-    String PATH = "/Users/zhongcheng/IdeaProjects/security/security-demo/src/main/java/com/zc/security/web/controller";
+    private static String PATH = "/Users/zhongcheng/IdeaProjects/security/security-demo/src/main/java/com/zc/security/web/controller";
 
     @PostMapping("/file")
     public FileInfo file(MultipartFile file) throws Exception {
@@ -30,7 +30,7 @@ public class FileController {
         System.out.println("fileName >>> " + fileName);
         System.out.println("size >>> " + size);
 
-        File f = new File(PATH, new Date().getTime() / 1000 + ".txt");
+        File f = new File(PATH,  System.currentTimeMillis() / 1000 + ".txt");
         file.transferTo(f);
 
         return new FileInfo(f.getAbsolutePath());

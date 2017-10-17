@@ -14,6 +14,7 @@ import com.zc.security.core.SecurityConstants;
  * @author zhongcheng_m@yeah.net
  * @version 1.0.0
  */
+@SuppressWarnings("ALL")
 public enum ValidateCodeType {
 
 

@@ -103,6 +103,7 @@ public class WXOauth2Template extends OAuth2Template {
     }
 
 
+    @Override
     public AccessGrant refreshAccess(String refreshToken, MultiValueMap<String, String> additionalParameters) {
 
         StringBuilder refreshTokenUrl = new StringBuilder(REFRESH_TOKEN_URL);
@@ -152,12 +153,14 @@ public class WXOauth2Template extends OAuth2Template {
     /**
      * 构建获取授权码的请求。也就是引导用户跳转到微信的地址。
      */
+    @Override
     public String buildAuthenticateUrl(OAuth2Parameters parameters) {
         String url = super.buildAuthenticateUrl(parameters);
         url = url + "&appid=" + clientId + "&scope=snsapi_login";
         return url;
     }
 
+    @Override
     public String buildAuthorizeUrl(OAuth2Parameters parameters) {
         return buildAuthenticateUrl(parameters);
     }
@@ -165,6 +168,7 @@ public class WXOauth2Template extends OAuth2Template {
     /**
      * 微信返回的contentType是html/text，添加相应的HttpMessageConverter来处理。
      */
+    @Override
     protected RestTemplate createRestTemplate() {
         RestTemplate restTemplate = super.createRestTemplate();
         restTemplate.getMessageConverters().add(new StringHttpMessageConverter(Charset.forName("UTF-8")));

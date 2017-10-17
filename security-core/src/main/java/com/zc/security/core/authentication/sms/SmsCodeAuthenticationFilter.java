@@ -45,9 +45,10 @@ public class SmsCodeAuthenticationFilter extends
     // ~ Methods
     // ========================================================================================================
 
+    @Override
     public Authentication attemptAuthentication(HttpServletRequest request,
                                                 HttpServletResponse response) throws AuthenticationException {
-        if (postOnly && !request.getMethod().equals("POST")) {
+        if (postOnly && !"POST".equals(request.getMethod())) {
             throw new AuthenticationServiceException(
                     "Authentication method not supported: " + request.getMethod());
         }
@@ -79,7 +80,6 @@ public class SmsCodeAuthenticationFilter extends
      * </p>
      *
      * @param request so that request attributes can be retrieved
-     *
      * @return the password that will be presented in the <code>Authentication</code>
      * request token to the <code>AuthenticationManager</code>
      */
@@ -92,7 +92,6 @@ public class SmsCodeAuthenticationFilter extends
      * including additional values and a separator.
      *
      * @param request so that request attributes can be retrieved
-     *
      * @return the username that will be presented in the <code>Authentication</code>
      * request token to the <code>AuthenticationManager</code>
      */
@@ -104,9 +103,9 @@ public class SmsCodeAuthenticationFilter extends
      * Provided so that subclasses may configure what is put into the authentication
      * request's details property.
      *
-     * @param request that an authentication request is being created for
+     * @param request     that an authentication request is being created for
      * @param authRequest the authentication request object that should have its details
-     * set
+     *                    set
      */
     protected void setDetails(HttpServletRequest request,
                               SmsCodeAuthenticationToken authRequest) {

@@ -15,6 +15,7 @@ package com.zc.security.core.social.qq.api;
  * @author zhongcheng_m@yeah.net
  * @version 1.0.0
  */
+@SuppressWarnings("AlibabaLowerCamelCaseVariableNaming")
 public class QQUserInfo {
 
     /**

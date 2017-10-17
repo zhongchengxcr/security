@@ -17,6 +17,7 @@ import java.util.Set;
  * @author zhongcheng_m@yeah.net
  * @version 1.0.0
  */
+@SuppressWarnings("ALL")
 public class UserAuthentication {
 
     private String userName;

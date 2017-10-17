@@ -20,7 +20,7 @@ public class MyIntercrpter implements HandlerInterceptor {
         System.out.println(((HandlerMethod) handler).getBean().getClass().getName());
         System.out.println(((HandlerMethod) handler).getMethod().getName());
 
-        request.setAttribute("startTime", new Date().getTime());
+        request.setAttribute("startTime", System.currentTimeMillis());
         return true;
     }
 
@@ -28,14 +28,14 @@ public class MyIntercrpter implements HandlerInterceptor {
     public void postHandle(HttpServletRequest request, HttpServletResponse httpServletResponse, Object o, ModelAndView modelAndView) throws Exception {
         System.out.println("postHandle");
         Long start = (Long) request.getAttribute("startTime");
-        System.out.println("time interceptor 耗时:" + (new Date().getTime() - start));
+        System.out.println("time interceptor 耗时:" + (System.currentTimeMillis() - start));
     }
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse httpServletResponse, Object o, Exception ex) throws Exception {
         System.out.println("afterCompletion");
         Long start = (Long) request.getAttribute("startTime");
-        System.out.println("time interceptor 耗时:" + (new Date().getTime() - start));
+        System.out.println("time interceptor 耗时:" + (System.currentTimeMillis() - start));
         System.out.println("ex is " + ex);
     }
 }

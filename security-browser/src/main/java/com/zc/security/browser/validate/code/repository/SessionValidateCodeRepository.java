@@ -26,7 +26,7 @@ public class SessionValidateCodeRepository implements ValidateCodeRepository {
     /**
      * 验证码放入session时的前缀
      */
-    String SESSION_KEY_PREFIX = "SESSION_KEY_FOR_CODE_";
+     private static final String SESSION_KEY_PREFIX = "SESSION_KEY_FOR_CODE_";
 
     /**
      * 操作session的工具类

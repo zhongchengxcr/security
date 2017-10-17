@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 
 
+@SuppressWarnings("AlibabaServiceOrDaoClassShouldEndWithImpl")
 @Component
 public class MyUserDetailService implements UserDetailsService, SocialUserDetailsService {
 
