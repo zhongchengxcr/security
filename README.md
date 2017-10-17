@@ -2,11 +2,9 @@
 ####security 安全校验SDK 
 
 [![](https://img.shields.io/badge/JDK-1.8-green.svg)]()
-[![](https://img.shields.io/badge/maven-3.5.0-green.svg)]()
-[![](https://img.shields.io/badge/Powered_by-SpringBoot+SpringSecurity-green.svg)]()
 [![](https://img.shields.io/badge/build-passing-green.svg)]()
 
-[![](http://progressed.io/bar/40?title=completed)]()
+[![](http://progressed.io/bar/70?title=completed)]()
 
 Security是一个web安全校验SDK，配置简单、功能完善、开箱即用！security使用SpringBoot、SpringSecurity、SpringSocial编写，
 能与springboot的web项目完美兼容。
@@ -18,17 +16,17 @@ Security的所提供所有功能,只需要进行简单的配置即可在自己�
 * 短信验证码登录(complete)
 * 图形验证码校验(complete)
 * 短信验证码校验(complete)
-* 注册(processing)
+* 注册(complete)
 
 
-* 微信登录(浏览器)(plan)
-* 微信登录(app)(plan)
-* qq登录(浏览器)(plan)
-* qq登录(app)(plan)
+* 微信登录(浏览器)(complete)
+* 微信登录(app)(complete)
+* qq登录(浏览器)(complete)
+* qq登录(app)(complete)
 
 
-* 集群Session管理(plan)
-* 单点登录、登出(plan)
+* 集群Session管理(complete)
+* 单点登录、登出(complete)
 
 
 * 权限的管理与控制(plan)
